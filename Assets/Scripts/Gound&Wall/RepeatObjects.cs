@@ -5,21 +5,14 @@ using UnityEngine;
 public class RepeatObjects : MonoBehaviour
 {
     [SerializeField]
-    GameObject[] objects;
+    protected GameObject[] objects;
 
     [SerializeField]
-    float speed = 5f;
+    protected float speed = 5f;
 
     [SerializeField]
-    float width;
-
-    void Start()
-    {
-        //Collider2D backGroundCollider = GetComponentInChildren<Collider2D>();
-        //width = backGroundCollider.bounds.size.x;
-
-        //Debug.Log("width : " + width);
-    }
+    protected float width;
+    
 
     void Update()
     {
@@ -34,9 +27,7 @@ public class RepeatObjects : MonoBehaviour
                 Vector2 offset = new Vector2(width * 2, 0f);
                 go.transform.position = (Vector2)go.transform.position + offset;
             }
-        }
-
-        
+        }        
     }
 
 }
