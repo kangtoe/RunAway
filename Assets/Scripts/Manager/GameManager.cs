@@ -40,6 +40,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     float gameSpeed = 1f;
+    public float GameSpeed => gameSpeed;
 
     [SerializeField]
     GameState state = GameState.ready;
@@ -74,8 +75,6 @@ public class GameManager : MonoBehaviour
             state = GameState.pause;
             UiManager.SetPauseUi(true);
             Time.timeScale = 0;
-
-
         }
         else if (state == GameState.pause)
         {
@@ -89,5 +88,16 @@ public class GameManager : MonoBehaviour
         }
 
         return;
+    }
+
+    public void GameOver()
+    {
+        state = GameState.over;
+        UiManager.SetOverUi(true);
+    }
+
+    public void SetGameSpeed(float f)
+    {
+        gameSpeed = f;
     }
 }

@@ -26,6 +26,9 @@ public class UiManager : MonoBehaviour
     GameObject startUI;
 
     [SerializeField]
+    GameObject overUI;
+
+    [SerializeField]
     GameObject puaseUI;
 
     [SerializeField]
@@ -37,6 +40,11 @@ public class UiManager : MonoBehaviour
     public void SetStartUi(bool active)
     {
         startUI.SetActive(active);
+    }
+
+    public void SetOverUi(bool active)
+    {
+        overUI.SetActive(active);
     }
 
     public void SetPauseUi(bool active)

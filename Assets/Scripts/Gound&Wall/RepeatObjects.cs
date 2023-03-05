@@ -20,7 +20,7 @@ public class RepeatObjects : MonoBehaviour
         
         foreach (GameObject go in objects)
         {
-            go.transform.Translate(Vector3.left * speed * Time.deltaTime);
+            go.transform.Translate(Vector3.left * speed * GameManager.Instance.GameSpeed * Time.deltaTime);
 
             if (go.transform.position.x <= -width)
             {

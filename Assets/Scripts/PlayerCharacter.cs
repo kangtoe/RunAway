@@ -18,6 +18,7 @@ public class PlayerCharacter : MonoBehaviour
     bool isSliding;
     bool isDead;
     bool isInvincible;
+    bool isOnHit;
 
     Vector2 startPos;
     Rigidbody2D rb;
@@ -25,20 +26,27 @@ public class PlayerCharacter : MonoBehaviour
     AudioSource AudioSource;
     SpriteRenderer SpriteRenderer;
 
+    GameManager GameManager => GameManager.Instance;
+
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        SpriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        float animSpeed = GameManager.GameSpeed;
+        anim.SetFloat("animSpeed", animSpeed);
+
         if (isDead) return;
 
         anim.SetFloat("velocityY", rb.velocity.y);
 
+        
         // pc의 경우 (모바일에서는 버튼 처리)
         if (Input.GetButtonDown("Jump"))
         {
@@ -57,9 +65,27 @@ public class PlayerCharacter : MonoBehaviour
 
     }
 
-    void OnTriggerEnter2D(Collider2D collision)
-    {
-        
+    void OnTriggerStay2D(Collider2D collision)
+    {        
+        if (collision.gameObject.layer == LayerMask.NameToLayer("DeadZone") &&
+            collision.gameObject.layer == LayerMask.NameToLayer("Drill") && !isDead)
+        {
+            //Hit();
+
+            //if (!isDead)
+            //{
+            //    rb.velocity = Vector2.zero;
+            //    transform.position = startPos; // Repositioning
+            //}
+
+            GameManager.Instance.GameOver();
+        }
+
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Obstacle") && !isDead && !isInvincible)
+        {
+            Hit();
+            Debug.Log("HIT WITH : " + collision.gameObject.name);
+        }
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -81,6 +107,8 @@ public class PlayerCharacter : MonoBehaviour
 
     public void JumpCheck()
     {
+        if (isDead) return;
+        if (isOnHit) return;
         if (currentJumpCount >= maxJumpCount) return;
         if (isSliding) OnEndSlide();
 
@@ -105,6 +133,9 @@ public class PlayerCharacter : MonoBehaviour
 
     public void OnStartSlide()
     {
+        if (isDead) return;
+        if (isOnHit) return;
+
         anim.SetBool("slide", true);
         isSliding = true;
     }
@@ -115,9 +146,74 @@ public class PlayerCharacter : MonoBehaviour
         anim.SetBool("slide", false);
     }
 
-    void GroundCheck()
-    { 
-    
+    void Die()
+    {
+        isDead = true;
+        rb.GetComponent<Collider2D>().isTrigger = true;
+    }
+
+    void Hit()
+    {
+        float holdTime = 1f;
+        StartCoroutine(HitCr(holdTime));
+        StartCoroutine(InvincibleControl(holdTime + 0.5f));
+    }
+
+    IEnumerator HitCr(float duration)
+    {
+        //float stopTime = 0.2f;
+
+        isOnHit = true;
+        anim.SetBool("onHit", true);
+        //GameManager.SetGameSpeed(0);
+
+        //yield return new WaitForSeconds(duration);
+
+        float t = 0;
+        while (true)
+        {
+            t += Time.deltaTime / duration;
+            if (t > 1) t = 1;
+
+            float currentSpeed = Mathf.Lerp(1, 0, t);
+            GameManager.SetGameSpeed(currentSpeed);
+
+            if (t == 1) break;
+
+            yield return null;
+        }
+        
+
+        GameManager.SetGameSpeed(1);
+        isOnHit = false;
+        anim.SetBool("onHit", false);        
+    }
+
+    IEnumerator InvincibleControl(float duration, float interval = 0.1f)
+    {        
+        isInvincible = true;        
+        
+        float InvincibleTime = 0;
+
+        while (InvincibleTime < duration)
+        {         
+            SpriteRenderer.color = new Color32(255, 255, 255, 90);            
+
+            yield return new WaitForSeconds(interval);
+
+            SpriteRenderer.color = new Color32(255, 255, 255, 180);
+       
+            yield return new WaitForSeconds(interval);
+
+            InvincibleTime += interval;
+        }
+
+        SpriteRenderer.color
+                   = new Color32(255, 255, 255, 255);
+
+        isInvincible = false;
+     
+        yield return null;
     }
 
 }

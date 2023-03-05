@@ -14,7 +14,7 @@ public class RepeatGround : RepeatObjects
 
         for (int i = 0; i < objects.Length; i++)
         {
-            objects[i].transform.Translate(Vector3.left * speed * Time.deltaTime);
+            objects[i].transform.Translate(Vector3.left * GameManager.Instance.GameSpeed * speed * Time.deltaTime);
 
             if (objects[i].transform.position.x <= -width)
             {
