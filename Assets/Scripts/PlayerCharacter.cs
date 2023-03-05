@@ -5,6 +5,9 @@ using UnityEngine;
 public class PlayerCharacter : MonoBehaviour
 {
     [SerializeField]
+    GameObject jumpEfx;
+
+    [SerializeField]
     float jumpForce;
     [SerializeField]
     int maxJumpCount = 1;
@@ -34,6 +37,8 @@ public class PlayerCharacter : MonoBehaviour
     {
         if (isDead) return;
 
+        anim.SetFloat("velocityY", rb.velocity.y);
+
         // pc의 경우 (모바일에서는 버튼 처리)
         if (Input.GetButtonDown("Jump"))
         {
@@ -60,6 +65,7 @@ public class PlayerCharacter : MonoBehaviour
         {
             isGrounded = true;
             currentJumpCount = 0;
+            anim.SetBool("jump", !isGrounded);
         }
     }
 
@@ -78,7 +84,17 @@ public class PlayerCharacter : MonoBehaviour
 
         currentJumpCount++;
 
-        anim.SetBool("Grounded", isGrounded);
+        anim.SetBool("jump", true);
+
+        Vector3 offset = Vector3.up * 1f + Vector3.left * 0.5f;
+        Instantiate(jumpEfx, transform.position + offset, Quaternion.identity);
+
+        //anim.SetBool("Grounded", isGrounded);
+
+        if (currentJumpCount > 1)
+        {
+            //anim.SetTrigger("doubleJump");
+        }
     }
 
     public void OnStartSlide()
@@ -91,6 +107,11 @@ public class PlayerCharacter : MonoBehaviour
     {
         isSliding = false;
         anim.SetBool("slide", false);
+    }
+
+    void GroundCheck()
+    { 
+    
     }
 
 }
