@@ -5,6 +5,11 @@ using UnityEngine;
 public class PlayerCharacter : MonoBehaviour
 {
     [SerializeField]
+    Collider2D standCollider;
+    [SerializeField]
+    Collider2D slideCollider;
+
+    [SerializeField]
     GameObject jumpEfx;
 
     [SerializeField]
@@ -34,6 +39,8 @@ public class PlayerCharacter : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         SpriteRenderer = GetComponent<SpriteRenderer>();
+
+        slideCollider.enabled = false;
     }
 
     // Update is called once per frame
@@ -60,7 +67,7 @@ public class PlayerCharacter : MonoBehaviour
         }
         else
         {
-            OnEndSlide();
+            if (isSliding) OnEndSlide();
         }
 
     }
@@ -138,12 +145,18 @@ public class PlayerCharacter : MonoBehaviour
 
         anim.SetBool("slide", true);
         isSliding = true;
+
+        standCollider.enabled = false;
+        slideCollider.enabled = true;
     }
 
     public void OnEndSlide()
     {
         isSliding = false;
         anim.SetBool("slide", false);
+
+        standCollider.enabled = true;
+        slideCollider.enabled = false;
     }
 
     void Die()
@@ -183,7 +196,6 @@ public class PlayerCharacter : MonoBehaviour
             yield return null;
         }
         
-
         GameManager.SetGameSpeed(1);
         isOnHit = false;
         anim.SetBool("onHit", false);        
