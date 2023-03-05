@@ -792,7 +792,7 @@ GameObject:
   - component: {fileID: 149679576231054019}
   - component: {fileID: 1004396486227896286}
   - component: {fileID: 3870491309793163781}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Tilemap-obstacle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
