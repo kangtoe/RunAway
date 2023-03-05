@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public enum GameState
 { 
     ready = 0,
+    cutScene,
     play,
     pause,
     over,
@@ -55,7 +56,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Time.timeScale = gameSpeed;
+        //Time.timeScale = gameSpeed;
     }  
 
     public void StartGame()
