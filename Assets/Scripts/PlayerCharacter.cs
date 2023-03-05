@@ -57,6 +57,11 @@ public class PlayerCharacter : MonoBehaviour
 
     }
 
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        
+    }
+
     void OnCollisionEnter2D(Collision2D collision)
     {
         // 콜라이더가 부딪친 위치가 일정 값 이상일때만 작동
@@ -71,29 +76,30 @@ public class PlayerCharacter : MonoBehaviour
 
     void OnCollisionExit2D(Collision2D collision)
     {
-        isGrounded = false;
+        //isGrounded = false;
     }
 
     public void JumpCheck()
     {
         if (currentJumpCount >= maxJumpCount) return;
+        if (isSliding) OnEndSlide();
 
         rb.velocity = Vector2.zero;
         rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
         //AudioSource.Play();
 
         currentJumpCount++;
+        isGrounded = false;
+        anim.SetBool("jump", !isGrounded);
 
-        anim.SetBool("jump", true);
-
-        Vector3 offset = Vector3.up * 1f + Vector3.left * 0.5f;
+        Vector3 offset = Vector3.up * 0.1f + Vector3.left * 0.5f;
         Instantiate(jumpEfx, transform.position + offset, Quaternion.identity);
 
         //anim.SetBool("Grounded", isGrounded);
 
         if (currentJumpCount > 1)
         {
-            //anim.SetTrigger("doubleJump");
+            anim.SetTrigger("doubleJump");
         }
     }
 
