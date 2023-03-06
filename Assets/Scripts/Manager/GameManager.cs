@@ -34,16 +34,19 @@ public class GameManager : MonoBehaviour
     }
     private static GameManager instance;
 
-    UiManager UiManager => UiManager.Instance;
-
-    public bool IsPlaying => state == GameState.play ? true : false;
+    Drill drill;
+    float drillMove = 7f;
 
     [SerializeField]
-    float gameSpeed = 1f;
+    float gameSpeed = 1f; // ½ÃÀÛ ½Ã 1
     public float GameSpeed => gameSpeed;
 
     [SerializeField]
     GameState state = GameState.ready;
+
+    UiManager UiManager => UiManager.Instance;
+
+    public bool IsPlaying => state == GameState.play ? true : false;    
     
     void Start()
     {
@@ -52,6 +55,8 @@ public class GameManager : MonoBehaviour
         UiManager.SetStartUi(true);                
 
         Time.timeScale = gameSpeed;
+
+        drill = FindObjectOfType<Drill>();
     }
 
     // Update is called once per frame
@@ -62,10 +67,7 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-        state = GameState.play;
-
-        UiManager.SetInGameUIs(true);
-        UiManager.SetStartUi(false);
+        state = GameState.play;        
     }
 
     public void TogglePause()
@@ -100,4 +102,57 @@ public class GameManager : MonoBehaviour
     {
         gameSpeed = f;
     }
+
+    #region ÄÆ¾À ¿¬Ãâ
+
+    public void PlayStartCutScene()
+    {
+        if (state != GameState.ready)
+        {
+            Debug.Log("Play StartCutScene Only ready state!");
+            return;
+        }
+
+        UiManager.SetInGameUIs(true);
+        UiManager.SetStartUi(false);
+
+        float duration = 3f;
+        state = GameState.cutScene;
+        StartCoroutine(StartCutSceneCr(duration));
+    }
+
+    IEnumerator StartCutSceneCr(float duration)
+    {
+        SetGameSpeed(2);        
+
+        float t = 0;
+        drill.moveDrill = false;
+        while (true)
+        {
+            t += Time.fixedDeltaTime / duration;
+            if (t > 1) t = 1;
+            if (t == 1) break;
+
+            drill.originPos -= Vector3.right * Time.fixedDeltaTime / duration * drillMove;            
+
+            yield return new WaitForFixedUpdate();
+        }
+
+        //yield return new WaitForSeconds(duration);
+        SetGameSpeed(1);
+
+        StartGame();
+    }
+
+    public void PlayOverCutScene()
+    {
+
+    }
+
+    public void PlayClearCutScene()
+    {
+
+    }
+
+    #endregion ÄÆ¾À ¿¬Ãâ
 }

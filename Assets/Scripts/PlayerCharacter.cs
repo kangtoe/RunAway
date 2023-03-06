@@ -17,7 +17,15 @@ public class PlayerCharacter : MonoBehaviour
     [SerializeField]
     int maxJumpCount = 1;
 
-    int lifeCount;
+    [Header("피격 상태 유지 시간")]
+    [SerializeField]
+    float hitHoldTime = 1f;
+
+    [Header("피격 상태 후 무적 시간")]
+    [SerializeField]
+    float invincibleTIme = 0.25f;
+
+    //int lifeCount;
     int currentJumpCount;
     bool isGrounded;
     bool isSliding;
@@ -168,8 +176,8 @@ public class PlayerCharacter : MonoBehaviour
     void Hit()
     {
         float holdTime = 1f;
-        StartCoroutine(HitCr(holdTime));
-        StartCoroutine(InvincibleControl(holdTime + 0.5f));
+        StartCoroutine(HitCr(hitHoldTime));
+        StartCoroutine(InvincibleControl(holdTime + invincibleTIme));
     }
 
     IEnumerator HitCr(float duration)
