@@ -81,10 +81,15 @@ public class PlayerCharacter : MonoBehaviour
     }
 
     void OnTriggerStay2D(Collider2D collision)
-    {        
-        if (collision.gameObject.layer == LayerMask.NameToLayer("DeadZone") &&
-            collision.gameObject.layer == LayerMask.NameToLayer("Drill") && !isDead)
+    {
+        Debug.Log("HIT WITH : " + collision.gameObject.name);
+
+        if (isDead) return;
+
+        if (collision.gameObject.layer == LayerMask.NameToLayer("DeadZone") ||
+            collision.gameObject.layer == LayerMask.NameToLayer("Drill"))
         {
+            
             //Hit();
 
             //if (!isDead)
@@ -96,10 +101,9 @@ public class PlayerCharacter : MonoBehaviour
             GameManager.Instance.GameOver();
         }
 
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Obstacle") && !isDead && !isInvincible)
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Obstacle") && !isInvincible)
         {
-            Hit();
-            Debug.Log("HIT WITH : " + collision.gameObject.name);
+            Hit();            
         }
     }
 
