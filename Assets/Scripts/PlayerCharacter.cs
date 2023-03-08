@@ -40,6 +40,7 @@ public class PlayerCharacter : MonoBehaviour
     SpriteRenderer SpriteRenderer;
 
     GameManager GameManager => GameManager.Instance;
+    UiManager UiManager => UiManager.Instance;
 
     // Start is called before the first frame update
     void Start()
@@ -65,12 +66,13 @@ public class PlayerCharacter : MonoBehaviour
         // pc의 경우 (모바일에서는 버튼 처리)
         if (Input.GetButtonDown("Jump"))
         {
-            JumpCheck();
+            TryJump();
         }
 
         if (InputManager.Instance.SlideInput)
         {
-            if(!isSliding) OnStartSlide();
+            if(!isGrounded) Slam();
+            if (!isSliding) OnStartSlide();
 
         }
         else
@@ -116,20 +118,24 @@ public class PlayerCharacter : MonoBehaviour
             isGrounded = true;
             currentJumpCount = 0;
             anim.SetBool("jump", !isGrounded);
+
+            UiManager.SetRightBtnTxt("slide");
         }
     }
 
     void OnCollisionExit2D(Collision2D collision)
     {
         //isGrounded = false;
-    }
+    }    
 
-    public void JumpCheck()
+    public void TryJump()
     {
         if (isDead) return;
         if (isOnHit) return;
         if (currentJumpCount >= maxJumpCount) return;
         if (isSliding) OnEndSlide();
+
+        UiManager.SetRightBtnTxt("down");
 
         rb.velocity = Vector2.zero;
         rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
@@ -169,6 +175,21 @@ public class PlayerCharacter : MonoBehaviour
 
         standCollider.enabled = true;
         slideCollider.enabled = false;
+    }
+
+    // 체공 중 바닥으로 빠르게 이동
+    void Slam()
+    {
+        Debug.Log("slam");
+
+        if (isGrounded)
+        {
+            Debug.Log("can slam only on air");
+            return;
+        }
+
+        rb.velocity = Vector2.zero;
+        rb.AddForce(new Vector2(0, -jumpForce), ForceMode2D.Impulse);        
     }
 
     void Die()

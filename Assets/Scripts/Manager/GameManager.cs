@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public enum GameState
 { 
@@ -96,6 +97,11 @@ public class GameManager : MonoBehaviour
     {
         state = GameState.over;
         UiManager.SetOverUi(true);
+    }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void SetGameSpeed(float f)
