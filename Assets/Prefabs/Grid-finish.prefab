@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3322137927281818571}
   - component: {fileID: 3481693364553746054}
   - component: {fileID: 5328813708765554402}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Tilemap-wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -245,7 +245,8 @@ GameObject:
   - component: {fileID: 8482815010558164968}
   - component: {fileID: 7951379358418189539}
   - component: {fileID: 5295514366590042234}
-  m_Layer: 0
+  - component: {fileID: 1644112250953801929}
+  m_Layer: 9
   m_Name: Tilemap-elevator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -524,6 +525,32 @@ TilemapRenderer:
   m_Mode: 0
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
+--- !u!61 &1644112250953801929
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5654516004356114724}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 16, y: -5}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 4, y: 2}
+  m_EdgeRadius: 0
 --- !u!1 &6224807188678516136
 GameObject:
   m_ObjectHideFlags: 0
@@ -538,7 +565,7 @@ GameObject:
   - component: {fileID: 6224807188678516130}
   - component: {fileID: 6224807188678516141}
   - component: {fileID: 6224807188678516140}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Tilemap-bridge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -766,14 +793,14 @@ CompositeCollider2D:
   m_ColliderPaths:
   - m_Collider: {fileID: 6224807188678516130}
     m_ColliderPaths:
-    - - X: -40000000
-        Y: -40000000
-      - X: -120000000
-        Y: -40000000
-      - X: -120000000
+    - - X: -120000000
         Y: -50000000
       - X: -40000000
         Y: -50000000
+      - X: -40000000
+        Y: -40000000
+      - X: -120000000
+        Y: -40000000
   m_CompositePaths:
     m_Paths:
     - - {x: -4.000029, y: -5}
@@ -792,7 +819,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6224807188730341574}
   - component: {fileID: 6224807188730341569}
-  m_Layer: 0
+  - component: {fileID: 4125643967545246846}
+  m_Layer: 9
   m_Name: Grid-finish
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -830,6 +858,32 @@ Grid:
   m_CellGap: {x: 0, y: 0, z: 0}
   m_CellLayout: 0
   m_CellSwizzle: 0
+--- !u!61 &4125643967545246846
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6224807188730341568}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 24, y: 20}
+  m_EdgeRadius: 0
 --- !u!1 &6224807188834017787
 GameObject:
   m_ObjectHideFlags: 0
@@ -844,7 +898,7 @@ GameObject:
   - component: {fileID: 6224807188834017789}
   - component: {fileID: 6224807188834017788}
   - component: {fileID: 6224807188834017791}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Tilemap-ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1930,21 +1984,7 @@ CompositeCollider2D:
   m_ColliderPaths:
   - m_Collider: {fileID: 6224807188834017789}
     m_ColliderPaths:
-    - - X: 280000041
-        Y: 80000100
-      - X: 219999959
-        Y: 80000100
-      - X: 219999900
-        Y: 80000041
-      - X: 219999900
-        Y: -39999900
-      - X: 199999959
-        Y: -39999900
-      - X: 199999900
-        Y: -39999959
-      - X: 199999900
-        Y: -40000000
-      - X: -60000000
+    - - X: -60000000
         Y: -40000000
       - X: -60000000
         Y: -83750000
@@ -1956,24 +1996,20 @@ CompositeCollider2D:
         Y: -103750000
       - X: -25625000
         Y: -120000000
-      - X: 199999900
+      - X: 280000000
         Y: -120000000
-      - X: 199999900
-        Y: -120000041
-      - X: 199999959
-        Y: -120000100
-      - X: 280000041
-        Y: -120000100
-      - X: 280000100
-        Y: -120000041
-      - X: 280000100
-        Y: 80000041
+      - X: 280000000
+        Y: 80000000
+      - X: 220000000
+        Y: 80000000
+      - X: 220000000
+        Y: -40000000
   m_CompositePaths:
     m_Paths:
-    - - {x: 27.999975, y: -12.00001}
-      - {x: 27.999975, y: 8.00001}
-      - {x: 21.99999, y: 7.9999747}
-      - {x: 21.99996, y: -3.99999}
+    - - {x: 27.999971, y: -12}
+      - {x: 27.999971, y: 8}
+      - {x: 22, y: 7.9999704}
+      - {x: 21.999971, y: -4}
       - {x: -6, y: -4.000029}
       - {x: -5.999994, y: -8.375008}
       - {x: -4.562488, y: -10}
@@ -1993,7 +2029,7 @@ GameObject:
   - component: {fileID: 2100301006566378951}
   - component: {fileID: 9023399434416038763}
   - component: {fileID: 8171771965661428304}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Tilemap-elevator_rebar
   m_TagString: Untagged
   m_Icon: {fileID: 0}

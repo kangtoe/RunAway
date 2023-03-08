@@ -7,10 +7,12 @@ using UnityEngine.SceneManagement;
 public enum GameState
 { 
     ready = 0,
-    cutScene,
+    playWait,
     play,
     pause,
     over,
+    preClearWait, // 플레이어 진행도 100% 달성 시
+    clearWait, // 클리어 포인트 (엘리베이터 내부) 도달
     clear
 }
 
@@ -35,8 +37,11 @@ public class GameManager : MonoBehaviour
     }
     private static GameManager instance;
 
+    RepeatGround repeatGround;
+    ProgressBar progressBar;
+
     Drill drill;
-    float drillMove = 7f;  
+    float drillMove = 7f;    
 
     [SerializeField]
     float gameSpeed = 1f; // 시작 시 1
@@ -48,7 +53,7 @@ public class GameManager : MonoBehaviour
     UiManager UiManager => UiManager.Instance;
 
     public bool IsPlaying => state == GameState.play ? true : false;
-    public bool IsInCutScene => state == GameState.cutScene ? true : false;
+    public bool IsInCutScene => state == GameState.playWait ? true : false;
 
     void Start()
     {
@@ -59,7 +64,18 @@ public class GameManager : MonoBehaviour
         Time.timeScale = gameSpeed;
 
         drill = FindObjectOfType<Drill>();
-    } 
+        progressBar = FindObjectOfType<ProgressBar>();
+        repeatGround = FindObjectOfType<RepeatGround>();
+    }
+
+    void Update()
+    {
+        if (state == GameState.play && progressBar.isFullProgress)
+        {            
+            repeatGround.isRepeating = false;
+            state = GameState.preClearWait;
+        }
+    }
 
     public void StartGame()
     {
@@ -104,13 +120,25 @@ public class GameManager : MonoBehaviour
         gameSpeed = f;
     }
 
+    // 플레이어 진행도가 끝에 도달했을때 호출    
+    public void WaitClear()
+    {
+        if (state != GameState.play)
+        {
+            Debug.Log("can WaitClear on play state!");
+            return;
+        }
+
+        
+    }
+
     #region 컷씬 연출
 
     public void PlayStartCutScene()
     {
         if (state != GameState.ready)
         {
-            Debug.Log("Play StartCutScene Only ready state!");
+            Debug.Log("can play StartCutScene On ready state!");
             return;
         }
 
@@ -118,7 +146,7 @@ public class GameManager : MonoBehaviour
         UiManager.SetStartUi(false);
 
         float duration = 3f;
-        state = GameState.cutScene;
+        state = GameState.playWait;
         StartCoroutine(StartCutSceneCr(duration));
     }
 
@@ -152,7 +180,14 @@ public class GameManager : MonoBehaviour
 
     public void PlayClearCutScene()
     {
+        
+    }
 
+    IEnumerator ClearCutSceneCr(float duaration)
+    {
+        SetGameSpeed(0);
+
+        yield return new WaitForFixedUpdate();
     }
 
     #endregion 컷씬 연출

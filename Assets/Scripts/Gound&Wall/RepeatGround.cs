@@ -7,6 +7,11 @@ public class RepeatGround : RepeatObjects
     [SerializeField]
     GameObject[] GroundPrefabs;
 
+    [SerializeField]
+    GameObject ClearGroundPrefab;
+
+    public bool isRepeating = true;
+
     // Update is called once per frame
     void Update()
     {
@@ -16,7 +21,7 @@ public class RepeatGround : RepeatObjects
         {
             objects[i].transform.Translate(Vector3.left * GameManager.Instance.GameSpeed * speed * Time.deltaTime);
 
-            if (objects[i].transform.position.x <= -width)
+            if (isRepeating && objects[i].transform.position.x <= -width)
             {
                 //Debug.Log("set ground to new pos");
 

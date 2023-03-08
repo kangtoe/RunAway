@@ -90,6 +90,12 @@ public class PlayerCharacter : MonoBehaviour
 
         if (isDead) return;
 
+        if (collision.gameObject.layer == LayerMask.NameToLayer("ClearTrigger"))
+        {
+            Debug.Log("Clear");
+            GameManager.WaitClear();
+        }
+
         if (collision.gameObject.layer == LayerMask.NameToLayer("DeadZone") ||
             collision.gameObject.layer == LayerMask.NameToLayer("Drill"))
         {

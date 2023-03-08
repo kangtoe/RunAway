@@ -5800,6 +5800,7 @@ MonoBehaviour:
   - {fileID: 2136098866498226788, guid: 7479266673c15554183c5e71cb566f54, type: 3}
   - {fileID: 1383494402572979524, guid: 13bbb6965f4e56f46bda9bb25097d690, type: 3}
   - {fileID: 8348834010835333685, guid: 03d54043767a0a746830401d0965a834, type: 3}
+  ClearGroundPrefab: {fileID: 6224807188730341568, guid: bd38c528f086bdd45885641be46f500d, type: 3}
 --- !u!1 &1532234568
 GameObject:
   m_ObjectHideFlags: 0

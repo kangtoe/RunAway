@@ -16,7 +16,7 @@ public class ProgressBar : MonoBehaviour
 
     float startProgress = 0;
     float endProgress = 100;
-    float playerStartProgress = 5f;
+    float playerStartProgress = 99f; //5
     float playerProgressPerSec = 0.5f;
     float DrillProgressPerSec = 0.25f;
 
@@ -26,6 +26,8 @@ public class ProgressBar : MonoBehaviour
     float playerProgress = 0;
 
     GameManager GameManager => GameManager.Instance;
+
+    public bool isFullProgress => playerProgress >= endProgress;
 
     // Start is called before the first frame update
     void Start()
@@ -53,8 +55,12 @@ public class ProgressBar : MonoBehaviour
         {
             drillProgress += DrillProgressPerSec * Time.deltaTime;
         }
-
-        if (drillProgress > 100) drillProgress = 100;
+        
+        if (drillProgress > 100)
+        {
+            drillProgress = 100;
+        } 
+        
 
         Vector3 drillPos = Vector3.Lerp(startPoint.position, endPoint.position, drillProgress / endProgress);
         drill_icon.position = drillPos;
