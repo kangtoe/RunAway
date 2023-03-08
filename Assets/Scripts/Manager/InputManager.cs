@@ -18,10 +18,15 @@ public class InputManager : MonoBehaviour
             return instance;
         }
     }
-    private static InputManager instance;
+    private static InputManager instance;    
 
+    // 버튼 유지 시 계속 입력 값은 참
     public bool SlideInput => slideinput;
     bool slideinput = false;
+
+    // 버튼 클릭한 프레임에만 입력 값이 참
+    public bool JumpInput => jumpinput; // || Input.GetButtonDown("Jump");
+    bool jumpinput = false;
 
     // Start is called before the first frame update
     void Start()
@@ -35,8 +40,18 @@ public class InputManager : MonoBehaviour
         
     }
 
+    void LateUpdate()
+    {
+        jumpinput = false;
+    }
+
     public void SetSlideInput(bool active)
     {
         slideinput = active;
+    }
+
+    public void SetJumpInput(bool active)
+    {
+        jumpinput = active;
     }
 }

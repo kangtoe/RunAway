@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
     private static GameManager instance;
 
     Drill drill;
-    float drillMove = 7f;
+    float drillMove = 7f;  
 
     [SerializeField]
     float gameSpeed = 1f; // ½ÃÀÛ ½Ã 1
@@ -47,8 +47,9 @@ public class GameManager : MonoBehaviour
 
     UiManager UiManager => UiManager.Instance;
 
-    public bool IsPlaying => state == GameState.play ? true : false;    
-    
+    public bool IsPlaying => state == GameState.play ? true : false;
+    public bool IsInCutScene => state == GameState.cutScene ? true : false;
+
     void Start()
     {
         UiManager.SetPauseUi(false);
@@ -58,13 +59,7 @@ public class GameManager : MonoBehaviour
         Time.timeScale = gameSpeed;
 
         drill = FindObjectOfType<Drill>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        //Time.timeScale = gameSpeed;
-    }  
+    } 
 
     public void StartGame()
     {

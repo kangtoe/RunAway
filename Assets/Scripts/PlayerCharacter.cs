@@ -39,6 +39,7 @@ public class PlayerCharacter : MonoBehaviour
     AudioSource AudioSource;
     SpriteRenderer SpriteRenderer;
 
+    InputManager InputManager => InputManager.Instance;
     GameManager GameManager => GameManager.Instance;
     UiManager UiManager => UiManager.Instance;
 
@@ -62,16 +63,17 @@ public class PlayerCharacter : MonoBehaviour
 
         anim.SetFloat("velocityY", rb.velocity.y);
 
-        
-        // pc의 경우 (모바일에서는 버튼 처리)
-        if (Input.GetButtonDown("Jump"))
-        {
+        if (isOnHit) return;
+
+        // 입력에 따른 제어
+        if (InputManager.JumpInput)
+        {            
             TryJump();
         }
 
-        if (InputManager.Instance.SlideInput)
+        if (InputManager.SlideInput)
         {
-            if(!isGrounded) Slam();
+            if (!isGrounded) Slam();
             if (!isSliding) OnStartSlide();
 
         }
@@ -157,10 +159,7 @@ public class PlayerCharacter : MonoBehaviour
     }
 
     public void OnStartSlide()
-    {
-        if (isDead) return;
-        if (isOnHit) return;
-
+    {        
         anim.SetBool("slide", true);
         isSliding = true;
 
