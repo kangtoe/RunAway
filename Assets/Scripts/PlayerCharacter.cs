@@ -208,6 +208,8 @@ public class PlayerCharacter : MonoBehaviour
         float holdTime = 1f;
         StartCoroutine(HitCr(hitHoldTime));
         StartCoroutine(InvincibleControl(holdTime + invincibleTIme));
+
+        CameraManager.Instance.Shake();
     }
 
     IEnumerator HitCr(float duration)

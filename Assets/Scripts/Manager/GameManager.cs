@@ -45,6 +45,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     float gameSpeed = 1f; // ���� �� 1
+    float maxGameSpeed = 5f;
     public float GameSpeed => gameSpeed;
 
     [SerializeField]
@@ -71,16 +72,22 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        if (state == GameState.play && progressBar.isFullProgress)
+        if (state == GameState.play)
         {            
-            Debug.Log("state : preClearWait");                      
-            state = GameState.preClearWait;
-        }
+            if(gameSpeed < maxGameSpeed) gameSpeed += Time.deltaTime * 0.01f;
+            else if(gameSpeed > maxGameSpeed)gameSpeed = maxGameSpeed;    
+            
+            if(progressBar.isFullProgress)
+            {
+                Debug.Log("state : preClearWait");                      
+                state = GameState.preClearWait;
+            }            
+        }                
     }
 
     public void StartGame()
     {
-        state = GameState.play;        
+        state = GameState.play;              
     }
 
     public void TogglePause()
@@ -108,6 +115,7 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         state = GameState.over;
+        SetGameSpeed(0);
         UiManager.SetOverUi(true);
     }
 
