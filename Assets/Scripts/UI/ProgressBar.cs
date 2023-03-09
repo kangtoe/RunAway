@@ -16,7 +16,7 @@ public class ProgressBar : MonoBehaviour
 
     float startProgress = 0;
     float endProgress = 100;
-    float playerStartProgress = 99f; //5
+    float playerStartProgress = 5f; //5
     float playerProgressPerSec = 0.5f;
     float DrillProgressPerSec = 0.25f;
 
@@ -40,25 +40,25 @@ public class ProgressBar : MonoBehaviour
         if (!GameManager.IsPlaying && !GameManager.IsInCutScene) return;
 
         
-        if (playerProgress < 100)
+        if (playerProgress < endProgress)
         {
             playerProgress += playerProgressPerSec * Time.deltaTime;
         }
 
-        if (playerProgress > 100) playerProgress = 100;
+        if (playerProgress > endProgress) playerProgress = endProgress;
 
         Vector3 playerPos = Vector3.Lerp(startPoint.position, endPoint.position, playerProgress / endProgress);
         player_icon.position = playerPos;
 
 
-        if (drillProgress < 100)
+        if (drillProgress < endProgress)
         {
             drillProgress += DrillProgressPerSec * Time.deltaTime;
         }
         
-        if (drillProgress > 100)
+        if (drillProgress > endProgress)
         {
-            drillProgress = 100;
+            drillProgress = endProgress;
         } 
         
 

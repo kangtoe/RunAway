@@ -11,17 +11,17 @@ public enum GameState
     play,
     pause,
     over,
-    preClearWait, // ÇÃ·¹ÀÌ¾î ÁøÇàµµ 100% ´Þ¼º ½Ã
-    clearWait, // Å¬¸®¾î Æ÷ÀÎÆ® (¿¤¸®º£ÀÌÅÍ ³»ºÎ) µµ´Þ
+    preClearWait, // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½àµµ 100% ï¿½Þ¼ï¿½ ï¿½ï¿½
+    clearWait, // Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½) ï¿½ï¿½ï¿½ï¿½
     clear
 }
 
-// °ÔÀÓ ÀüÃ¼ Èå¸§ °ü¸®
-// 1. °ÔÀÓÀÇ »óÅÂ (½ÃÀÛ Àü, ÇÃ·¹ÀÌ Áß, ÀÏ½ÃÁ¤Áö µî) °ü¸®
-// 2. °ÔÀÓÀÇ ¼Óµµ °ü¸®
+// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ ï¿½å¸§ ï¿½ï¿½ï¿½ï¿½
+// 1. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½, ï¿½Ã·ï¿½ï¿½ï¿½ ï¿½ï¿½, ï¿½Ï½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½) ï¿½ï¿½ï¿½ï¿½
+// 2. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Óµï¿½ ï¿½ï¿½ï¿½ï¿½
 public class GameManager : MonoBehaviour
 {    
-    //½Ì±ÛÅæ
+    //ï¿½Ì±ï¿½ï¿½ï¿½
     public static GameManager Instance
     {
         get
@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour
                 instance = FindObjectOfType<GameManager>();
             }
 
-            // ½Ì±ÛÅæ ¿ÀºêÁ§Æ®¸¦ ¹ÝÈ¯
+            // ï¿½Ì±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½È¯
             return instance;
         }
     }
@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
     float drillMove = 7f;    
 
     [SerializeField]
-    float gameSpeed = 1f; // ½ÃÀÛ ½Ã 1
+    float gameSpeed = 1f; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ 1
     public float GameSpeed => gameSpeed;
 
     [SerializeField]
@@ -54,6 +54,7 @@ public class GameManager : MonoBehaviour
 
     public bool IsPlaying => state == GameState.play ? true : false;
     public bool IsInCutScene => state == GameState.playWait ? true : false;
+    public bool IsInPreClearWait => state == GameState.preClearWait ? true : false;
 
     void Start()
     {
@@ -72,7 +73,7 @@ public class GameManager : MonoBehaviour
     {
         if (state == GameState.play && progressBar.isFullProgress)
         {            
-            repeatGround.isRepeating = false;
+            Debug.Log("state : preClearWait");                      
             state = GameState.preClearWait;
         }
     }
@@ -110,6 +111,13 @@ public class GameManager : MonoBehaviour
         UiManager.SetOverUi(true);
     }
 
+    public void GameClear()
+    {
+        Debug.Log("GameClear");
+        SetGameSpeed(0);
+
+    }
+
     public void RestartGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
@@ -120,19 +128,7 @@ public class GameManager : MonoBehaviour
         gameSpeed = f;
     }
 
-    // ÇÃ·¹ÀÌ¾î ÁøÇàµµ°¡ ³¡¿¡ µµ´ÞÇßÀ»¶§ È£Ãâ    
-    public void WaitClear()
-    {
-        if (state != GameState.play)
-        {
-            Debug.Log("can WaitClear on play state!");
-            return;
-        }
-
-        
-    }
-
-    #region ÄÆ¾À ¿¬Ãâ
+    #region ï¿½Æ¾ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     public void PlayStartCutScene()
     {
@@ -190,5 +186,5 @@ public class GameManager : MonoBehaviour
         yield return new WaitForFixedUpdate();
     }
 
-    #endregion ÄÆ¾À ¿¬Ãâ
+    #endregion ï¿½Æ¾ï¿½ ï¿½ï¿½ï¿½ï¿½
 }

@@ -10,7 +10,10 @@ public class RepeatGround : RepeatObjects
     [SerializeField]
     GameObject ClearGroundPrefab;
 
-    public bool isRepeating = true;
+    [SerializeField]
+    public bool isRepeating = true;    
+
+    GameManager GameManager => GameManager.Instance;
 
     // Update is called once per frame
     void Update()
@@ -28,13 +31,22 @@ public class RepeatGround : RepeatObjects
                 Vector2 offset = new Vector2(width * 2, 0f);
                 objects[i].transform.position = (Vector2)objects[i].transform.position + offset;
 
-                if (GameManager.Instance.IsPlaying)
+                if (GameManager.IsPlaying)
                 {
-                    // ±×¶ó¿îµå ÆÐÅÏ ±³Ã¼
-                    GameObject nextGround = Instantiate(GetRandomGround(), transform);
+                    // ï¿½×¶ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼                    
+                    GameObject nextGround = Instantiate(GetRandomGround(), transform);                    
                     nextGround.transform.position = objects[i].transform.position;
                     Destroy(objects[i]);
                     objects[i] = nextGround;
+                }
+
+                if(GameManager.IsInPreClearWait)
+                {                    
+                    GameObject nextGround = Instantiate(ClearGroundPrefab, transform);
+                    Destroy(objects[i]);
+                    objects[i] = nextGround;
+
+                    isRepeating = false;                                        
                 }                
             }
         }

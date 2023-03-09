@@ -17,11 +17,11 @@ public class PlayerCharacter : MonoBehaviour
     [SerializeField]
     int maxJumpCount = 1;
 
-    [Header("ÇÇ°Ý »óÅÂ À¯Áö ½Ã°£")]
+    [Header("ï¿½Ç°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½")]
     [SerializeField]
     float hitHoldTime = 1f;
 
-    [Header("ÇÇ°Ý »óÅÂ ÈÄ ¹«Àû ½Ã°£")]
+    [Header("ï¿½Ç°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½")]
     [SerializeField]
     float invincibleTIme = 0.25f;
 
@@ -65,7 +65,7 @@ public class PlayerCharacter : MonoBehaviour
 
         if (isOnHit) return;
 
-        // ÀÔ·Â¿¡ µû¸¥ Á¦¾î
+        // ï¿½Ô·Â¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (InputManager.JumpInput)
         {            
             TryJump();
@@ -93,7 +93,7 @@ public class PlayerCharacter : MonoBehaviour
         if (collision.gameObject.layer == LayerMask.NameToLayer("ClearTrigger"))
         {
             Debug.Log("Clear");
-            GameManager.WaitClear();
+            GameManager.GameClear();
         }
 
         if (collision.gameObject.layer == LayerMask.NameToLayer("DeadZone") ||
@@ -119,8 +119,8 @@ public class PlayerCharacter : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        // ÄÝ¶óÀÌ´õ°¡ ºÎµúÄ£ À§Ä¡°¡ ÀÏÁ¤ °ª ÀÌ»óÀÏ¶§¸¸ ÀÛµ¿
-        // ¸Ó¸® ºÎºÐÀÌ ºÎµúÈ÷¸é µ¿ÀÛÇÏÁö ¾Êµµ·Ï
+        // ï¿½Ý¶ï¿½ï¿½Ì´ï¿½ï¿½ï¿½ ï¿½Îµï¿½Ä£ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ì»ï¿½ï¿½Ï¶ï¿½ï¿½ï¿½ ï¿½Ûµï¿½
+        // ï¿½Ó¸ï¿½ ï¿½Îºï¿½ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Êµï¿½ï¿½ï¿½
         if (collision.contacts[0].normal.y > 0.5f)
         {
             isGrounded = true;
@@ -182,7 +182,7 @@ public class PlayerCharacter : MonoBehaviour
         slideCollider.enabled = false;
     }
 
-    // Ã¼°ø Áß ¹Ù´ÚÀ¸·Î ºü¸£°Ô ÀÌµ¿
+    // Ã¼ï¿½ï¿½ ï¿½ï¿½ ï¿½Ù´ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
     void Slam()
     {
         Debug.Log("slam");
