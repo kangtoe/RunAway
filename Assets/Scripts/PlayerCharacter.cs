@@ -17,11 +17,11 @@ public class PlayerCharacter : MonoBehaviour
     [SerializeField]
     int maxJumpCount = 1;
 
-    [Header("�ǰ� ���� ���� �ð�")]
+    [Header("피격 시 대기시간")]
     [SerializeField]
     float hitHoldTime = 1f;
 
-    [Header("�ǰ� ���� �� ���� �ð�")]
+    [Header("피격 후 무적시간")]
     [SerializeField]
     float invincibleTIme = 0.25f;
 
@@ -64,8 +64,7 @@ public class PlayerCharacter : MonoBehaviour
         anim.SetFloat("velocityY", rb.velocity.y);
 
         if (isOnHit) return;
-
-        // �Է¿� ���� ����
+        
         if (InputManager.JumpInput)
         {            
             TryJump();
@@ -119,8 +118,7 @@ public class PlayerCharacter : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        // �ݶ��̴��� �ε�ģ ��ġ�� ���� �� �̻��϶��� �۵�
-        // �Ӹ� �κ��� �ε����� �������� �ʵ���
+        // 발 부분 충돌 시에만 착지 판정
         if (collision.contacts[0].normal.y > 0.5f)
         {
             isGrounded = true;
@@ -182,7 +180,7 @@ public class PlayerCharacter : MonoBehaviour
         slideCollider.enabled = false;
     }
 
-    // ü�� �� �ٴ����� ������ �̵�
+    // 체공 중 바닥으로 빠르게 낙하
     void Slam()
     {
         Debug.Log("slam");

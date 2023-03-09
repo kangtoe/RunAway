@@ -45,7 +45,7 @@ public class Drill : MonoBehaviour
             if (moveDrill)
             {
                 f += Time.deltaTime;
-                // cos´Â x = 0ÀÏ¶§ y = 1ÀÓ => x = 90¿¡¼­ ½ÃÀÛÇØ¾ß y = 0
+                // cosëŠ” x = 0ì¼ë•Œ y = 1ì„ => x = 90ì—ì„œ ì‹œì‘í•´ì•¼ y = 0
                 offsetX = Mathf.Cos((90 - f * speed) * Mathf.Deg2Rad) * move;                                
             }
 

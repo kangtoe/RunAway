@@ -11,17 +11,15 @@ public enum GameState
     play,
     pause,
     over,
-    preClearWait, // �÷��̾� ���൵ 100% �޼� ��
-    clearWait, // Ŭ���� ����Ʈ (���������� ����) ����
+    preClearWait, // 프로그래스 바 100% -> 다음 그라운드 패턴 = 피니시 그라운드 출현
+    clearWait, // 클리어 포인트 도달
     clear
 }
 
-// ���� ��ü �帧 ����
-// 1. ������ ���� (���� ��, �÷��� ��, �Ͻ����� ��) ����
-// 2. ������ �ӵ� ����
+// 게임 전체 흐름(진행 상태) 제어
 public class GameManager : MonoBehaviour
 {    
-    //�̱���
+    // 싱글톤
     public static GameManager Instance
     {
         get
@@ -30,8 +28,6 @@ public class GameManager : MonoBehaviour
             {                
                 instance = FindObjectOfType<GameManager>();
             }
-
-            // �̱��� ������Ʈ�� ��ȯ
             return instance;
         }
     }
@@ -44,7 +40,7 @@ public class GameManager : MonoBehaviour
     float drillMove = 7f;    
 
     [SerializeField]
-    float gameSpeed = 1f; // ���� �� 1
+    float gameSpeed = 1f; // 기본값 1
     float maxGameSpeed = 5f;
     public float GameSpeed => gameSpeed;
 
@@ -136,7 +132,7 @@ public class GameManager : MonoBehaviour
         gameSpeed = f;
     }
 
-    #region �ƾ� ����
+    #region 컷신연출
 
     public void PlayStartCutScene()
     {
@@ -194,5 +190,5 @@ public class GameManager : MonoBehaviour
         yield return new WaitForFixedUpdate();
     }
 
-    #endregion �ƾ� ����
+    #endregion 컷신연출
 }
