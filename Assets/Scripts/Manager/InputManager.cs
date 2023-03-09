@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    //½Ì±ÛÅæ
+    //ì‹±ê¸€í†¤
     public static InputManager Instance
     {
         get
@@ -14,17 +14,17 @@ public class InputManager : MonoBehaviour
                 instance = FindObjectOfType<InputManager>();
             }
 
-            // ½Ì±ÛÅæ ¿ÀºêÁ§Æ®¸¦ ¹ÝÈ¯
+            // ì‹±ê¸€í†¤ ì˜¤ë¸Œì íŠ¸ë¥¼ ë°˜í™˜
             return instance;
         }
     }
     private static InputManager instance;    
 
-    // ¹öÆ° À¯Áö ½Ã °è¼Ó ÀÔ·Â °ªÀº Âü
+    // ë²„íŠ¼ ìœ ì§€ ì‹œ ê³„ì† ìž…ë ¥ ê°’ì€ ì°¸
     public bool SlideInput => slideinput;
     bool slideinput = false;
 
-    // ¹öÆ° Å¬¸¯ÇÑ ÇÁ·¹ÀÓ¿¡¸¸ ÀÔ·Â °ªÀÌ Âü
+    // ë²„íŠ¼ í´ë¦­í•œ í”„ë ˆìž„ì—ë§Œ ìž…ë ¥ ê°’ì´ ì°¸
     public bool JumpInput => jumpinput; // || Input.GetButtonDown("Jump");
     bool jumpinput = false;
 

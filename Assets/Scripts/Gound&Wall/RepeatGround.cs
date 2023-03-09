@@ -33,7 +33,7 @@ public class RepeatGround : RepeatObjects
 
                 if (GameManager.IsPlaying)
                 {
-                    // �׶��� ���� ��ü                    
+                    // 그라운드 패턴 교체                         
                     GameObject nextGround = Instantiate(GetRandomGround(), transform);                    
                     nextGround.transform.position = objects[i].transform.position;
                     Destroy(objects[i]);

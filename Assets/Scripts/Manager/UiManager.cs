@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-// ui Á¦¾î ±â´É¸¸À» Á¦°øÇÏ´Â ÇïÆÛ Å¬·¡½º
+// ui ì œì–´ ê¸°ëŠ¥ë§Œì„ ì œê³µí•˜ëŠ” í—¬í¼ í´ë˜ìŠ¤
 public class UiManager : MonoBehaviour
 {
-    //½Ì±ÛÅæ
+    //ì‹±ê¸€í†¤
     public static UiManager Instance
     {
         get
@@ -15,8 +15,6 @@ public class UiManager : MonoBehaviour
             {
                 instance = FindObjectOfType<UiManager>();
             }
-
-            // ½Ì±ÛÅæ ¿ÀºêÁ§Æ®¸¦ ¹İÈ¯
             return instance;
         }
     }
