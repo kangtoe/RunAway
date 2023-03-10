@@ -16,7 +16,7 @@ public class ProgressBar : MonoBehaviour
 
     float startProgress = 0;
     float endProgress = 100;
-    float playerStartProgress = 5f; // 기본값 : 5?
+    float playerStartProgress = 99f; // 기본값 : 5?
     float playerProgressPerSec = 0.5f;
     float DrillProgressPerSec = 0.25f;
 

@@ -43,7 +43,7 @@ public class ScoreManager : MonoBehaviour
 
         // 천의 자리까지 비어있는 경우 0으로 채우기
         // 9999 점 이상은 9999+ 로 표기
-        // 3번째 자리 마다 구분자 넣기
+        // 3번째 자리 마다 구분자 넣기 (예: 1,000)
 
         scoreText.text = str;
     }

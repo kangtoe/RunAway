@@ -56,7 +56,7 @@ public class PlayerCharacter : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float animSpeed = GameManager.GameSpeed;
+        float animSpeed = GameManager.GameSpeed;        
         anim.SetFloat("animSpeed", animSpeed);
 
         if (isDead) return;
@@ -85,14 +85,17 @@ public class PlayerCharacter : MonoBehaviour
 
     void OnTriggerStay2D(Collider2D collision)
     {
-        Debug.Log("HIT WITH : " + collision.gameObject.name);
+        //Debug.Log("HIT WITH : " + collision.gameObject.name);
 
         if (isDead) return;
 
         if (collision.gameObject.layer == LayerMask.NameToLayer("ClearTrigger"))
         {
-            Debug.Log("Clear");
-            GameManager.GameClear();
+            //Debug.Log("Clear");
+
+            anim.SetBool("idle", true);
+            GameManager.PlayClearCutScene();
+            //GameManager.GameClear();
         }
 
         if (collision.gameObject.layer == LayerMask.NameToLayer("Item"))

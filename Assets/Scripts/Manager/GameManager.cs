@@ -120,11 +120,11 @@ public class GameManager : MonoBehaviour
         UiManager.SetOverUi(true);
     }
 
-    public void GameClear()
+    void GameClear()
     {
-        Debug.Log("GameClear");
+        //Debug.Log("GameClear");
         SetGameSpeed(0);
-
+        UiManager.SetClearUi(true);
     }
 
     public void RestartGame()
@@ -185,14 +185,22 @@ public class GameManager : MonoBehaviour
 
     public void PlayClearCutScene()
     {
-        
+        SetGameSpeed(0);
+
+        float clearWait = 5f;
+        StartCoroutine(ClearCutSceneCr(clearWait));
+        Invoke(nameof(GameClear), clearWait);        
     }
 
     IEnumerator ClearCutSceneCr(float duaration)
     {
-        SetGameSpeed(0);
+        float move = 0.25f;
 
-        yield return new WaitForFixedUpdate();
+        while (true)
+        {
+            repeatGround.Elevator.Translate(0, move * Time.deltaTime / duaration, 0);
+            yield return null;
+        }                
     }
 
     #endregion 컷신연출

@@ -9,6 +9,9 @@ public class RepeatGround : RepeatObjects
 
     [SerializeField]
     GameObject ClearGroundPrefab;
+    [SerializeField]
+    Transform elevator;
+    public Transform Elevator => elevator;
 
     [SerializeField]
     public bool isRepeating = true;    
@@ -43,8 +46,9 @@ public class RepeatGround : RepeatObjects
                 if(GameManager.IsInPreClearWait)
                 {                    
                     GameObject nextGround = Instantiate(ClearGroundPrefab, transform);
+                    elevator = nextGround.transform.Find("Tilemap-elevator");
                     Destroy(objects[i]);
-                    objects[i] = nextGround;
+                    objects[i] = nextGround;                    
 
                     isRepeating = false;                                        
                 }                

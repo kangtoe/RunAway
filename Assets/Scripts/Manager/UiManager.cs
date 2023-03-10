@@ -30,6 +30,9 @@ public class UiManager : MonoBehaviour
     GameObject puaseUI;
 
     [SerializeField]
+    GameObject clearUI;
+
+    [SerializeField]
     Text rightBtnTxt;
 
     [SerializeField]
@@ -48,6 +51,11 @@ public class UiManager : MonoBehaviour
     public void SetPauseUi(bool active)
     {
         puaseUI.SetActive(active);
+    }
+
+    public void SetClearUi(bool active)
+    {
+        clearUI.SetActive(active);
     }
 
     public void SetInGameUIs(bool active)
