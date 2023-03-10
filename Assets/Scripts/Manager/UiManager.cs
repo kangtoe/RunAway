@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-// ui 제어 기능만을 제공하는 헬퍼 클래스
+// ui 이동, 활성화 제어 기능만을 제공하는 헬퍼 클래스
 public class UiManager : MonoBehaviour
 {
     //싱글톤

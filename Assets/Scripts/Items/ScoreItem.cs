@@ -2,17 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ScoreItem : MonoBehaviour
+public class ScoreItem : ItemBase
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField]
+    int addScore = 100;
 
-    // Update is called once per frame
-    void Update()
+    public override void UseItem()
     {
-        
+        ScoreManager.Instance.AddScore(addScore);
+        Destroy(gameObject);
     }
 }

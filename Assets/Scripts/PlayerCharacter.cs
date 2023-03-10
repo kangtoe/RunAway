@@ -95,6 +95,12 @@ public class PlayerCharacter : MonoBehaviour
             GameManager.GameClear();
         }
 
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Item"))
+        {
+            ItemBase item = collision.gameObject.GetComponent<ItemBase>();
+            item.UseItem();
+        }
+
         if (collision.gameObject.layer == LayerMask.NameToLayer("DeadZone") ||
             collision.gameObject.layer == LayerMask.NameToLayer("Drill"))
         {

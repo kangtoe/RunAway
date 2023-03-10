@@ -16,8 +16,8 @@ public class ItemBase : MonoBehaviour
         
     }
 
-    void OnTriggerEnter2D(Collider2D collision)
-    {
-        
+    public virtual void UseItem()
+    { 
+    
     }
 }
