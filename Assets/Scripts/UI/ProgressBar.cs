@@ -16,14 +16,20 @@ public class ProgressBar : MonoBehaviour
 
     float startProgress = 0;
     float endProgress = 100;
-    float playerStartProgress = 5f; //5
+    float playerStartProgress = 5f; // 기본값 : 5?
     float playerProgressPerSec = 0.5f;
     float DrillProgressPerSec = 0.25f;
+
+    Animator playerIconAnim;
 
     [SerializeField]
     float drillProgress = 0;
     [SerializeField]
     float playerProgress = 0;
+
+    [Header("플레이어 진행 중지 기간")] // 이 값이 0보다 크다면, 플레이어는 이동 중이 아님
+    [SerializeField]
+    float holdPlayerTimeLeft = 0;
 
     GameManager GameManager => GameManager.Instance;
 
@@ -33,36 +39,62 @@ public class ProgressBar : MonoBehaviour
     void Start()
     {
         playerProgress = playerStartProgress;
+        playerIconAnim = player_icon.GetComponent<Animator>();
     }
 
     void Update()
     {
         if (!GameManager.IsPlaying && !GameManager.IsInCutScene) return;
 
-        
-        if (playerProgress < endProgress)
+        // 플레이어
         {
-            playerProgress += playerProgressPerSec * Time.deltaTime;
+            if (holdPlayerTimeLeft > 0)
+            {
+                holdPlayerTimeLeft -= Time.deltaTime;
+                // 플레이어 아이콘 애니메이션 대기
+                playerIconAnim.enabled = false;
+            }
+            else
+            {
+                holdPlayerTimeLeft = 0;
+                playerIconAnim.enabled = true;
+            }
+
+            if (holdPlayerTimeLeft == 0)
+            {
+                if (playerProgress < endProgress)
+                {
+                    playerProgress += playerProgressPerSec * Time.deltaTime;
+                }
+
+                if (playerProgress > endProgress) playerProgress = endProgress;
+
+                Vector3 playerPos = Vector3.Lerp(startPoint.position, endPoint.position, playerProgress / endProgress);
+                player_icon.position = playerPos;
+            }
         }
 
-        if (playerProgress > endProgress) playerProgress = endProgress;
-
-        Vector3 playerPos = Vector3.Lerp(startPoint.position, endPoint.position, playerProgress / endProgress);
-        player_icon.position = playerPos;
-
-
-        if (drillProgress < endProgress)
+        // 드릴
         {
-            drillProgress += DrillProgressPerSec * Time.deltaTime;
+            if (drillProgress < endProgress)
+            {
+                drillProgress += DrillProgressPerSec * Time.deltaTime;
+            }
+
+            if (drillProgress > endProgress)
+            {
+                drillProgress = endProgress;
+            }
+
+
+            Vector3 drillPos = Vector3.Lerp(startPoint.position, endPoint.position, drillProgress / endProgress);
+            drill_icon.position = drillPos;
         }
-        
-        if (drillProgress > endProgress)
-        {
-            drillProgress = endProgress;
-        } 
-        
 
-        Vector3 drillPos = Vector3.Lerp(startPoint.position, endPoint.position, drillProgress / endProgress);
-        drill_icon.position = drillPos;
+    }
+
+    public void SetHoldTime(float f)
+    {
+        holdPlayerTimeLeft = f;
     }
 }

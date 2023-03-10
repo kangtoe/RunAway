@@ -208,11 +208,11 @@ public class PlayerCharacter : MonoBehaviour
     }
 
     void Hit()
-    {
-        float holdTime = 1f;
+    {        
         StartCoroutine(HitCr(hitHoldTime));
-        StartCoroutine(InvincibleControl(holdTime + invincibleTIme));
+        StartCoroutine(InvincibleControl(hitHoldTime + invincibleTIme));
 
+        GameManager.HoldPlayerProgress(hitHoldTime);
         CameraManager.Instance.Shake();
     }
 

@@ -108,6 +108,11 @@ public class GameManager : MonoBehaviour
         return;
     }
 
+    public void HoldPlayerProgress(float duration)
+    {
+        progressBar.SetHoldTime(duration);
+    }
+
     public void GameOver()
     {
         state = GameState.over;
