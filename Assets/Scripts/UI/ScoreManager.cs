@@ -39,17 +39,27 @@ public class ScoreManager : MonoBehaviour
 
     void SetScoreText(int i)
     {
-        string str = i.ToString("D4"); // 항상 4자리 수로 출력되도록 수정
-        if (i >= 10000) // 9,999점을 넘을 경우 처리
+        string str = "";
+        if (i < 10)
         {
-            str = "9,999+";
+            str = "0,00" + i.ToString();
+        }
+        else if (i < 100)
+        {
+            str = "0,0" + i.ToString();
+        }
+        else if (i < 1000)
+        {
+            str = "0," + i.ToString();
+        }
+        else if (i < 10000)
+        {
+            str = string.Format("{0:#,###}", i);
         }
         else
         {
-            // 세 번째 자리마다 콤마(,) 구분자 삽입
-            str = string.Format("{0:#,###}", i);
+            str = "9,999+";
         }
-
         scoreText.text = str;
     }
 
