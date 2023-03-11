@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class ScoreManager : MonoBehaviour
 {
-    // ì‹±ê¸€í†¤
+    // ?‹±ê¸??†¤
     public static ScoreManager Instance
     {
         get
@@ -39,27 +39,26 @@ public class ScoreManager : MonoBehaviour
 
     void SetScoreText(int i)
     {
-        string str = "";
-        if (i < 10)
+        // ¼ýÀÚ¸¦ ¹®ÀÚ¿­·Î º¯È¯
+        string str = i.ToString();
+
+        // ¼ýÀÚ ÀÚ¸´¼ö°¡ 1~3ÀÚ¸®¸é ¾Õ¿¡ '0,00' ~ '0,' ¸¦ ºÙ¿©ÁÖ±â
+        if (i < 1000)
         {
-            str = "0,00" + i.ToString();
+            str = "0," + str.PadLeft(3, '0');
         }
-        else if (i < 100)
-        {
-            str = "0,0" + i.ToString();
-        }
-        else if (i < 1000)
-        {
-            str = "0," + i.ToString();
-        }
+        // ¼ýÀÚ ÀÚ¸´¼ö°¡ 4ÀÚ¸®¸é ',' ±¸ºÐÀÚ »ðÀÔ
         else if (i < 10000)
         {
-            str = string.Format("{0:#,###}", i);
+            str = string.Format("{0:#,}", i);
         }
+        // ¼ýÀÚ ÀÚ¸´¼ö°¡ 5ÀÚ¸® ÀÌ»óÀÌ¸é '9,999+' ·Î Ãâ·Â
         else
         {
             str = "9,999+";
         }
+
+        // Á¡¼ö Ç¥½Ã ¾÷µ¥ÀÌÆ®
         scoreText.text = str;
     }
 
