@@ -28,7 +28,7 @@ public class ScoreManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        SetScoreText(score);
     }
 
     // Update is called once per frame
@@ -39,11 +39,16 @@ public class ScoreManager : MonoBehaviour
 
     void SetScoreText(int i)
     {
-        string str = i.ToString();
-
-        // 천의 자리까지 비어있는 경우 0으로 채우기
-        // 9999 점 이상은 9999+ 로 표기
-        // 3번째 자리 마다 구분자 넣기 (예: 1,000)
+        string str = i.ToString("D4"); // 항상 4자리 수로 출력되도록 수정
+        if (i >= 10000) // 9,999점을 넘을 경우 처리
+        {
+            str = "9,999+";
+        }
+        else
+        {
+            // 세 번째 자리마다 콤마(,) 구분자 삽입
+            str = string.Format("{0:#,###}", i);
+        }
 
         scoreText.text = str;
     }
