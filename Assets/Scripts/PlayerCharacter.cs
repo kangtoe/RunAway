@@ -15,6 +15,8 @@ public class PlayerCharacter : MonoBehaviour
     [SerializeField]
     float jumpForce;
     [SerializeField]
+    float slamForce;
+    [SerializeField]
     int maxJumpCount = 1;
 
     [Header("피격 시 대기시간")]
@@ -130,6 +132,7 @@ public class PlayerCharacter : MonoBehaviour
         // 발 부분 충돌 시에만 착지 판정
         if (collision.contacts[0].normal.y > 0.5f)
         {
+            rb.velocity = Vector2.zero;
             isGrounded = true;
             currentJumpCount = 0;
             anim.SetBool("jump", !isGrounded);
@@ -201,7 +204,7 @@ public class PlayerCharacter : MonoBehaviour
         }
 
         rb.velocity = Vector2.zero;
-        rb.AddForce(new Vector2(0, -jumpForce), ForceMode2D.Impulse);        
+        rb.AddForce(new Vector2(0, -slamForce), ForceMode2D.Impulse);        
     }
 
     void Die()
