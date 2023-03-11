@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class ScoreManager : MonoBehaviour
 {
-    // ?‹±ê¸??†¤
+    // ?ë–›æ¹²??ë„ 
     public static ScoreManager Instance
     {
         get
@@ -39,26 +39,26 @@ public class ScoreManager : MonoBehaviour
 
     void SetScoreText(int i)
     {
-        // ¼ıÀÚ¸¦ ¹®ÀÚ¿­·Î º¯È¯
+        // ìˆ«ìë¥¼ ë¬¸ìì—´ë¡œ ë³€í™˜
         string str = i.ToString();
 
-        // ¼ıÀÚ ÀÚ¸´¼ö°¡ 1~3ÀÚ¸®¸é ¾Õ¿¡ '0,00' ~ '0,' ¸¦ ºÙ¿©ÁÖ±â
+        // ìˆ«ì ìë¦¿ìˆ˜ê°€ 1~3ìë¦¬ë©´ ì•ì— '0,00' ~ '0,' ë¥¼ ë¶™ì—¬ì£¼ê¸°
         if (i < 1000)
         {
             str = "0," + str.PadLeft(3, '0');
         }
-        // ¼ıÀÚ ÀÚ¸´¼ö°¡ 4ÀÚ¸®¸é ',' ±¸ºĞÀÚ »ğÀÔ
+        // ìˆ«ì ìë¦¿ìˆ˜ê°€ 4ìë¦¬ë©´ ',' êµ¬ë¶„ì ì‚½ì…
         else if (i < 10000)
         {
             str = string.Format("{0:#,}", i);
         }
-        // ¼ıÀÚ ÀÚ¸´¼ö°¡ 5ÀÚ¸® ÀÌ»óÀÌ¸é '9,999+' ·Î Ãâ·Â
+        // ìˆ«ì ìë¦¿ìˆ˜ê°€ 5ìë¦¬ ì´ìƒì´ë©´ '9,999+' ë¡œ ì¶œë ¥
         else
         {
             str = "9,999+";
         }
 
-        // Á¡¼ö Ç¥½Ã ¾÷µ¥ÀÌÆ®
+        // ì ìˆ˜ í‘œì‹œ ì—…ë°ì´íŠ¸
         scoreText.text = str;
     }
 
