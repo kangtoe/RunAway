@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class RepeatGround : RepeatObjects
-{    
+{
+    [SerializeField]
+    ItemSpwaner itemSpwaner;
+
     [SerializeField]
     GameObject[] GroundPrefabs;
 
@@ -16,7 +19,7 @@ public class RepeatGround : RepeatObjects
     [SerializeField]
     public bool isRepeating = true;    
 
-    GameManager GameManager => GameManager.Instance;
+    GameManager GameManager => GameManager.Instance;    
 
     // Update is called once per frame
     void Update()
@@ -41,6 +44,14 @@ public class RepeatGround : RepeatObjects
                     nextGround.transform.position = objects[i].transform.position;
                     Destroy(objects[i]);
                     objects[i] = nextGround;
+
+                    // 아이템 생성
+                    Transform spwanPoint;
+                    float ran = Random.Range(0f, 1f);
+                    if (ran > 0.5f) spwanPoint = nextGround.transform.Find("Itempoint1");
+                    else spwanPoint = nextGround.transform.Find("Itempoint2");
+                    if (spwanPoint == null) Debug.Log("spwanPoint is null!");
+                    itemSpwaner.SpwanItem(spwanPoint);
                 }
 
                 if(GameManager.IsInPreClearWait)

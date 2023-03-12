@@ -138,7 +138,12 @@ public class PlayerCharacter : MonoBehaviour
         // 발 부분 충돌 시에만 착지 판정
         if (collision.contacts[0].normal.y > 0.5f)
         {
-            rb.velocity = Vector2.zero;
+            // 하강 중
+            if (rb.velocity.y < 0)
+            {
+                rb.velocity = Vector2.zero;
+            }
+            
             isGrounded = true;
             currentJumpCount = 0;
             anim.SetBool("jump", !isGrounded);
@@ -246,13 +251,8 @@ public class PlayerCharacter : MonoBehaviour
 
     IEnumerator HitCr(float duration)
     {
-        //float stopTime = 0.2f;
 
-        isOnHit = true;
-        anim.SetBool("onHit", true);
-        //GameManager.SetGameSpeed(0);
-
-        //yield return new WaitForSeconds(duration);
+        OnStartHit();
 
         float t = 0;
         while (true)
@@ -268,6 +268,19 @@ public class PlayerCharacter : MonoBehaviour
             yield return null;
         }
 
+        OnEndHit();
+    }
+
+    void OnStartHit()
+    {
+
+        isOnHit = true;
+        anim.SetBool("onHit", true);
+        //GameManager.SetGameSpeed(0);
+    }
+
+    void OnEndHit()
+    {
         GameManager.SetGameSpeed(1);
         isOnHit = false;
         anim.SetBool("onHit", false);
@@ -305,9 +318,7 @@ public class PlayerCharacter : MonoBehaviour
     }
 
     IEnumerator BoostControl(float duration, float boostAmount)
-    {
-        StopAllCoroutines();
-
+    {        
         float additionalInvincibleTime = 1f;
 
         if (isBoosted)
@@ -315,6 +326,12 @@ public class PlayerCharacter : MonoBehaviour
             Debug.Log("isBoosted already!");
             yield break;
         }
+
+        if (isOnHit)
+        {
+            OnEndHit();
+        }
+
         isBoosted = true;
 
         GameManager.SetGameSpeed(1 * boostAmount);
@@ -335,6 +352,7 @@ public class PlayerCharacter : MonoBehaviour
 
     public void StartBoost(float duration, float boostAmount)
     {
+        StopAllCoroutines();
         StartCoroutine(BoostControl(duration, boostAmount));
     }
 }
