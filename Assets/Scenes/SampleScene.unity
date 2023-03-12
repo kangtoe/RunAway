@@ -2814,7 +2814,7 @@ MonoBehaviour:
   slamForce: 60
   maxJumpCount: 2
   hitHoldTime: 1
-  invincibleTIme: 0.25
+  invincibleTime: 1
 --- !u!1 &869371706
 GameObject:
   m_ObjectHideFlags: 0
@@ -3803,7 +3803,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1220809103
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4526,15 +4526,15 @@ GameObject:
   m_Component:
   - component: {fileID: 1477817663}
   - component: {fileID: 1477817662}
-  - component: {fileID: 1477817661}
   - component: {fileID: 1477817660}
+  - component: {fileID: 1477817661}
   m_Layer: 10
   m_Name: Item-Booster
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!58 &1477817660
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -4560,10 +4560,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1477817659}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a7ed63154e766c40b6cf2a4c1be0788, type: 3}
+  m_Script: {fileID: 11500000, guid: a3ea0cdcf78d93f46bca12d26053a68d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  addScore: 100
+  boostTime: 3
+  boostAmount: 3
 --- !u!212 &1477817662
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -4624,7 +4625,7 @@ Transform:
   m_GameObject: {fileID: 1477817659}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 2, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 14

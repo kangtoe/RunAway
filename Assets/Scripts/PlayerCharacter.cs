@@ -28,7 +28,7 @@ public class PlayerCharacter : MonoBehaviour
 
     [Header("피격 후 무적시간")]
     [SerializeField]
-    float invincibleTIme = 0.25f;
+    float hitInvincibleTime = 0.5f;
 
     //int lifeCount;
     int currentJumpCount;
@@ -38,6 +38,7 @@ public class PlayerCharacter : MonoBehaviour
     bool isInvincible;
     bool isOnHit;
     bool isShielded;
+    bool isBoosted;
 
     Vector2 startPos;
     Rigidbody2D rb;
@@ -49,7 +50,8 @@ public class PlayerCharacter : MonoBehaviour
     GameManager GameManager => GameManager.Instance;
     UiManager UiManager => UiManager.Instance;
 
-    // Start is called before the first frame update
+    #region 유니티 라이프 사이클
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -59,10 +61,10 @@ public class PlayerCharacter : MonoBehaviour
         slideCollider.enabled = false;
     }
 
-    // Update is called once per frame
+
     void Update()
     {
-        float animSpeed = GameManager.GameSpeed;        
+        float animSpeed = GameManager.GameSpeed;
         anim.SetFloat("animSpeed", animSpeed);
 
         if (isDead) return;
@@ -70,9 +72,9 @@ public class PlayerCharacter : MonoBehaviour
         anim.SetFloat("velocityY", rb.velocity.y);
 
         if (isOnHit) return;
-        
+
         if (InputManager.JumpInput)
-        {            
+        {
             TryJump();
         }
 
@@ -113,7 +115,7 @@ public class PlayerCharacter : MonoBehaviour
         if (collision.gameObject.layer == LayerMask.NameToLayer("DeadZone") ||
             collision.gameObject.layer == LayerMask.NameToLayer("Drill"))
         {
-            
+
             //Hit();
 
             //if (!isDead)
@@ -127,7 +129,7 @@ public class PlayerCharacter : MonoBehaviour
 
         if (collision.gameObject.layer == LayerMask.NameToLayer("Obstacle") && !isInvincible)
         {
-            Hit();            
+            Hit();
         }
     }
 
@@ -150,11 +152,9 @@ public class PlayerCharacter : MonoBehaviour
         //isGrounded = false;
     }
 
-    public void ActiveShield(bool active)
-    {
-        shield.SetActive(active);
-        isShielded = active;
-    }
+    #endregion 유니티 라이프 사이클    
+
+    #region 점프 & 슬라이드 & 하강
 
     public void TryJump()
     {
@@ -185,7 +185,7 @@ public class PlayerCharacter : MonoBehaviour
     }
 
     public void OnStartSlide()
-    {        
+    {
         anim.SetBool("slide", true);
         isSliding = true;
 
@@ -202,10 +202,10 @@ public class PlayerCharacter : MonoBehaviour
         slideCollider.enabled = false;
     }
 
-    // 체공 중 바닥으로 빠르게 낙하
+    // 체공 중 바닥으로 빠르게 하강
     void Slam()
     {
-        Debug.Log("slam");
+        //Debug.Log("slam");
 
         if (isGrounded)
         {
@@ -214,8 +214,12 @@ public class PlayerCharacter : MonoBehaviour
         }
 
         rb.velocity = Vector2.zero;
-        rb.AddForce(new Vector2(0, -slamForce), ForceMode2D.Impulse);        
+        rb.AddForce(new Vector2(0, -slamForce), ForceMode2D.Impulse);
     }
+
+    #endregion 점프 & 슬라이드 & 하강
+
+    #region 피격 & 사망
 
     void Die()
     {
@@ -228,12 +232,12 @@ public class PlayerCharacter : MonoBehaviour
         if (isShielded)
         {
             ActiveShield(false);
-            StartCoroutine(InvincibleControl(invincibleTIme));
+            StartCoroutine(InvincibleControl(hitInvincibleTime));
         }
         else
         {
             StartCoroutine(HitCr(hitHoldTime));
-            StartCoroutine(InvincibleControl(hitHoldTime + invincibleTIme));
+            StartCoroutine(InvincibleControl(hitHoldTime + hitInvincibleTime));
             GameManager.HoldPlayerProgress(hitHoldTime);
         }
 
@@ -263,14 +267,18 @@ public class PlayerCharacter : MonoBehaviour
 
             yield return null;
         }
-        
+
         GameManager.SetGameSpeed(1);
         isOnHit = false;
-        anim.SetBool("onHit", false);        
+        anim.SetBool("onHit", false);
     }
 
+    #endregion 피격 & 사망
+
     IEnumerator InvincibleControl(float duration, float interval = 0.1f)
-    {        
+    {
+        Debug.Log("InvincibleControl : duration = " + duration);
+
         isInvincible = true;        
         
         float InvincibleTime = 0;
@@ -285,7 +293,7 @@ public class PlayerCharacter : MonoBehaviour
        
             yield return new WaitForSeconds(interval);
 
-            InvincibleTime += interval;
+            InvincibleTime += interval * 2;
         }
 
         SpriteRenderer.color
@@ -296,4 +304,37 @@ public class PlayerCharacter : MonoBehaviour
         yield return null;
     }
 
+    IEnumerator BoostControl(float duration, float boostAmount)
+    {
+        StopAllCoroutines();
+
+        float additionalInvincibleTime = 1f;
+
+        if (isBoosted)
+        {
+            Debug.Log("isBoosted already!");
+            yield break;
+        }
+        isBoosted = true;
+
+        GameManager.SetGameSpeed(1 * boostAmount);
+
+        StartCoroutine(InvincibleControl(duration + additionalInvincibleTime));
+        yield return new WaitForSeconds(duration);
+
+        Debug.Log("boost end");
+        GameManager.SetGameSpeed(1);
+        isBoosted = false;
+    }
+
+    public void ActiveShield(bool active)
+    {
+        shield.SetActive(active);
+        isShielded = active;
+    }
+
+    public void StartBoost(float duration, float boostAmount)
+    {
+        StartCoroutine(BoostControl(duration, boostAmount));
+    }
 }
