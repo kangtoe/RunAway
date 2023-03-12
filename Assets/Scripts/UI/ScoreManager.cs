@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class ScoreManager : MonoBehaviour
 {
-    // ?떛湲??넠
+    // 싱글톤
     public static ScoreManager Instance
     {
         get
@@ -50,7 +50,7 @@ public class ScoreManager : MonoBehaviour
         // 숫자 자릿수가 4자리면 ',' 구분자 삽입
         else if (i < 10000)
         {
-            str = string.Format("{0:#,}", i);
+            str = string.Format("{0:#,###}", i);
         }
         // 숫자 자릿수가 5자리 이상이면 '9,999+' 로 출력
         else
