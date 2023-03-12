@@ -17,16 +17,14 @@ public class ItemSpwaner : MonoBehaviour
     int SpwanedItemCount = 0;
 
     public GameObject SpwanItem(Transform tf)
-    {
-        SpwanedItemCount++;
-
+    {        
         GameObject go;
 
-        if (SpwanedItemCount % 12 == 0)
+        if (SpwanedItemCount != 0 && SpwanedItemCount % 12 == 0)
         {
             go = Instantiate(ShieldItem, tf);
         }
-        else if (SpwanedItemCount % 6 == 0)
+        else if (SpwanedItemCount != 0 &&  SpwanedItemCount % 6 == 0)
         {
             go = Instantiate(BoostItem, tf);
         }
@@ -36,6 +34,8 @@ public class ItemSpwaner : MonoBehaviour
         }
 
         go.transform.localPosition = Vector3.zero;
+        SpwanedItemCount++;
+
         return go;
     }
 }

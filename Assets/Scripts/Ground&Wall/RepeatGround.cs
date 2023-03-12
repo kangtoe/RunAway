@@ -17,7 +17,13 @@ public class RepeatGround : RepeatObjects
     public Transform Elevator => elevator;
 
     [SerializeField]
-    public bool isRepeating = true;    
+    public bool isRepeating = true;
+
+    [SerializeField]
+    int spwanedGroundCount = 0;
+    [Header("해당 N번째 프리팹 마다 아이템 등장")]
+    [SerializeField]
+    int ItemSpwanInterval = 3;
 
     GameManager GameManager => GameManager.Instance;    
 
@@ -40,18 +46,23 @@ public class RepeatGround : RepeatObjects
                 if (GameManager.IsPlaying)
                 {
                     // 그라운드 패턴 교체                         
-                    GameObject nextGround = Instantiate(GetRandomGround(), transform);                    
+                    GameObject nextGround = Instantiate(GetRandomGround(), transform);
                     nextGround.transform.position = objects[i].transform.position;
                     Destroy(objects[i]);
                     objects[i] = nextGround;
 
                     // 아이템 생성
-                    Transform spwanPoint;
-                    float ran = Random.Range(0f, 1f);
-                    if (ran > 0.5f) spwanPoint = nextGround.transform.Find("Itempoint1");
-                    else spwanPoint = nextGround.transform.Find("Itempoint2");
-                    if (spwanPoint == null) Debug.Log("spwanPoint is null!");
-                    itemSpwaner.SpwanItem(spwanPoint);
+                    if (spwanedGroundCount != 0 && spwanedGroundCount % ItemSpwanInterval == 0)
+                    {
+                        Transform spwanPoint;
+                        float ran = Random.Range(0f, 1f);
+                        if (ran > 0.5f) spwanPoint = nextGround.transform.Find("Itempoint1");
+                        else spwanPoint = nextGround.transform.Find("Itempoint2");
+                        if (spwanPoint == null) Debug.Log("spwanPoint is null!");
+                        itemSpwaner.SpwanItem(spwanPoint);
+                    }                    
+
+                    spwanedGroundCount++;
                 }
 
                 if(GameManager.IsInPreClearWait)
