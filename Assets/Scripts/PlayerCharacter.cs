@@ -251,8 +251,8 @@ public class PlayerCharacter : MonoBehaviour
 
     IEnumerator HitCr(float duration)
     {
-
         OnStartHit();
+        GameManager.SetDrillProgressPerSec(3f);
 
         float t = 0;
         while (true)
@@ -269,11 +269,11 @@ public class PlayerCharacter : MonoBehaviour
         }
 
         OnEndHit();
+        GameManager.SetDrillProgressPerSec(0.5f);
     }
 
     void OnStartHit()
     {
-
         isOnHit = true;
         anim.SetBool("onHit", true);
         //GameManager.SetGameSpeed(0);

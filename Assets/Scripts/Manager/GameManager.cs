@@ -39,6 +39,7 @@ public class GameManager : MonoBehaviour
     Drill drill;
     float drillMove = 7f;    
 
+    float startGameSpeed = 1;
     [SerializeField]
     float gameSpeed = 1f; // 기본값 1
     float maxGameSpeed = 5f;
@@ -59,11 +60,11 @@ public class GameManager : MonoBehaviour
         UiManager.SetInGameUIs(false);
         UiManager.SetStartUi(true);                
 
-        Time.timeScale = gameSpeed;
-
         drill = FindObjectOfType<Drill>();
         progressBar = FindObjectOfType<ProgressBar>();
         repeatGround = FindObjectOfType<RepeatGround>();
+
+        gameSpeed = startGameSpeed;
     }
 
     void Update()
@@ -98,7 +99,7 @@ public class GameManager : MonoBehaviour
         {
             state = GameState.play;
             UiManager.SetPauseUi(false);
-            Time.timeScale = gameSpeed;
+            Time.timeScale = 1;
         }
         else
         {
@@ -134,7 +135,10 @@ public class GameManager : MonoBehaviour
 
     public void SetGameSpeed(float f)
     {
-        gameSpeed = f;
+        if (f > maxGameSpeed) Debug.Log("set speed > maxGameSpeed! : " + f);
+        //if (f < startGameSpeed) Debug.Log("set speed < startGameSpeed! : " + f);        
+
+        gameSpeed = f;        
     }
 
     #region 컷신연출
@@ -153,6 +157,11 @@ public class GameManager : MonoBehaviour
         float duration = 3f;
         state = GameState.playWait;
         StartCoroutine(StartCutSceneCr(duration));
+    }
+
+    public void SetDrillProgressPerSec(float f)
+    {
+        progressBar.DrillProgressPerSec = f;
     }
 
     IEnumerator StartCutSceneCr(float duration)

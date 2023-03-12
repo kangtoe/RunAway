@@ -10,6 +10,8 @@ public class ProgressBar : MonoBehaviour
     Transform endPoint;
 
     [SerializeField]
+    Transform total_icon;
+    [SerializeField]
     Transform drill_icon;
     [SerializeField]
     Transform player_icon;
@@ -18,7 +20,7 @@ public class ProgressBar : MonoBehaviour
     float endProgress = 100;
     float playerStartProgress = 5f; // 기본값 : 5?
     float playerProgressPerSec = 0.5f;
-    float DrillProgressPerSec = 0.25f;
+    public float DrillProgressPerSec = 0.5f;
 
     Animator playerIconAnim;
 
