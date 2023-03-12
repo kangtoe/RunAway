@@ -13,6 +13,9 @@ public class PlayerCharacter : MonoBehaviour
     GameObject jumpEfx;
 
     [SerializeField]
+    GameObject shield;
+
+    [SerializeField]
     float jumpForce;
     [SerializeField]
     float slamForce;
@@ -34,6 +37,7 @@ public class PlayerCharacter : MonoBehaviour
     bool isDead;
     bool isInvincible;
     bool isOnHit;
+    bool isShielded;
 
     Vector2 startPos;
     Rigidbody2D rb;
@@ -103,7 +107,7 @@ public class PlayerCharacter : MonoBehaviour
         if (collision.gameObject.layer == LayerMask.NameToLayer("Item"))
         {
             ItemBase item = collision.gameObject.GetComponent<ItemBase>();
-            item.UseItem();
+            item.UseItem(this);
         }
 
         if (collision.gameObject.layer == LayerMask.NameToLayer("DeadZone") ||
@@ -144,7 +148,13 @@ public class PlayerCharacter : MonoBehaviour
     void OnCollisionExit2D(Collision2D collision)
     {
         //isGrounded = false;
-    }    
+    }
+
+    public void ActiveShield(bool active)
+    {
+        shield.SetActive(active);
+        isShielded = active;
+    }
 
     public void TryJump()
     {
@@ -214,11 +224,19 @@ public class PlayerCharacter : MonoBehaviour
     }
 
     void Hit()
-    {        
-        StartCoroutine(HitCr(hitHoldTime));
-        StartCoroutine(InvincibleControl(hitHoldTime + invincibleTIme));
+    {
+        if (isShielded)
+        {
+            ActiveShield(false);
+            StartCoroutine(InvincibleControl(invincibleTIme));
+        }
+        else
+        {
+            StartCoroutine(HitCr(hitHoldTime));
+            StartCoroutine(InvincibleControl(hitHoldTime + invincibleTIme));
+            GameManager.HoldPlayerProgress(hitHoldTime);
+        }
 
-        GameManager.HoldPlayerProgress(hitHoldTime);
         CameraManager.Instance.Shake();
     }
 

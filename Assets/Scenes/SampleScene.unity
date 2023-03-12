@@ -2809,6 +2809,7 @@ MonoBehaviour:
   standCollider: {fileID: 18412291}
   slideCollider: {fileID: 261972028}
   jumpEfx: {fileID: 7477326383036694954, guid: c40d2302a59ac6248b838ed9922d9687, type: 3}
+  shield: {fileID: 1659958488}
   jumpForce: 18
   slamForce: 60
   maxJumpCount: 2
@@ -8536,15 +8537,15 @@ GameObject:
   m_Component:
   - component: {fileID: 1658510632}
   - component: {fileID: 1658510631}
-  - component: {fileID: 1658510630}
   - component: {fileID: 1658510629}
+  - component: {fileID: 1658510630}
   m_Layer: 10
   m_Name: Item-Shield
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!58 &1658510629
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -8570,10 +8571,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1658510628}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a7ed63154e766c40b6cf2a4c1be0788, type: 3}
+  m_Script: {fileID: 11500000, guid: cdcdb2b22b90bef4b8b1c98fa71e611d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  addScore: 100
 --- !u!212 &1658510631
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -8634,7 +8634,7 @@ Transform:
   m_GameObject: {fileID: 1658510628}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 13
@@ -8656,7 +8656,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1659958489
 Transform:
   m_ObjectHideFlags: 0
@@ -8666,7 +8666,7 @@ Transform:
   m_GameObject: {fileID: 1659958488}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.015058, y: 0.58, z: 0}
-  m_LocalScale: {x: 0.72586, y: 0.72586, z: 0.72586}
+  m_LocalScale: {x: 0.72585994, y: 0.72586, z: 0.72586}
   m_Children: []
   m_Father: {fileID: 830246498}
   m_RootOrder: 2
@@ -8712,7 +8712,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 15
   m_Sprite: {fileID: 21300000, guid: 878ba56ba369f0346a6c09cb75ee8fbd, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.627451}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
