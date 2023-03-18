@@ -8,9 +8,12 @@ public class Drill : MonoBehaviour
     float move = 1f;
     [SerializeField]
     float speed = 1f;
+    
+    public Vector3 closePos;   
+    public Vector3 farPos;
 
     [SerializeField]
-    public Vector3 originPos;
+    public Vector3 centerPos;
 
     [SerializeField]
     public bool moveDrill = false;
@@ -23,7 +26,10 @@ public class Drill : MonoBehaviour
     
     void Start()
     {
-        originPos = transform.position;
+        closePos = transform.position;
+        farPos = closePos - Vector3.right * 5f;
+
+        centerPos = transform.position;
         moveDrill = true;
         StartCoroutine(SwingSmoothCr());
     }
@@ -49,9 +55,9 @@ public class Drill : MonoBehaviour
                 offsetX = Mathf.Cos((90 - f * speed) * Mathf.Deg2Rad) * move;                                
             }
 
-            transform.position = new Vector3(originPos.x + offsetX, originPos.y, originPos.z);
+            transform.position = new Vector3(centerPos.x + offsetX, centerPos.y, centerPos.z);
 
             yield return null;
         }
-    }
+    }    
 }

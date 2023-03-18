@@ -35,6 +35,7 @@ public class PlayerCharacter : MonoBehaviour
     bool isGrounded;
     bool isSliding;
     bool isDead;
+    [SerializeField]
     bool isInvincible;
     bool isOnHit;
     bool isShielded;
@@ -112,24 +113,19 @@ public class PlayerCharacter : MonoBehaviour
             item.UseItem(this);
         }
 
-        if (collision.gameObject.layer == LayerMask.NameToLayer("DeadZone") ||
-            collision.gameObject.layer == LayerMask.NameToLayer("Drill"))
-        {
-
-            //Hit();
-
-            //if (!isDead)
-            //{
-            //    rb.velocity = Vector2.zero;
-            //    transform.position = startPos; // Repositioning
-            //}
-
-            GameManager.Instance.GameOver();
-        }
-
         if (collision.gameObject.layer == LayerMask.NameToLayer("Obstacle") && !isInvincible)
         {
             Hit();
+        }
+
+        if (collision.gameObject.layer == LayerMask.NameToLayer("DeadZone") ||
+        collision.gameObject.layer == LayerMask.NameToLayer("Drill"))
+        {
+            GameManager.SetDrillDistance(DrillDistanceState.impact);
+
+            Die();
+            anim.SetBool("die", true);
+            GameManager.GameOver();
         }
     }
 
@@ -228,8 +224,18 @@ public class PlayerCharacter : MonoBehaviour
 
     void Die()
     {
+        Debug.Log("Die");
+
+        StopAllCoroutines();
+        if (isOnHit) OnEndHit();
+        GameManager.SetGameSpeed(0);
+
         isDead = true;
-        rb.GetComponent<Collider2D>().isTrigger = true;
+        rb.velocity = Vector2.zero;
+        rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
+
+        slideCollider.enabled = false;
+        standCollider.enabled = false;
     }
 
     void Hit()
@@ -251,8 +257,18 @@ public class PlayerCharacter : MonoBehaviour
 
     IEnumerator HitCr(float duration)
     {
-        OnStartHit();
-        GameManager.SetDrillProgressPerSec(3f);
+        Debug.Log("HitCr : " + duration);
+
+        if (GameManager.DrillDist == DrillDistanceState.far)
+        {
+            GameManager.SetDrillDistance(DrillDistanceState.close);
+        }
+        else if (GameManager.DrillDist == DrillDistanceState.close)
+        {
+            GameManager.SetDrillDistance(DrillDistanceState.impact);
+        }
+
+        OnStartHit();        
 
         float t = 0;
         while (true)
@@ -266,10 +282,9 @@ public class PlayerCharacter : MonoBehaviour
             if (t == 1) break;
 
             yield return null;
-        }
+        }        
 
-        OnEndHit();
-        GameManager.SetDrillProgressPerSec(0.5f);
+        OnEndHit();        
     }
 
     void OnStartHit()
@@ -281,6 +296,8 @@ public class PlayerCharacter : MonoBehaviour
 
     void OnEndHit()
     {
+        SpriteRenderer.color = new Color32(255, 255, 255, 255);
+
         GameManager.SetGameSpeed(1);
         isOnHit = false;
         anim.SetBool("onHit", false);
@@ -290,7 +307,7 @@ public class PlayerCharacter : MonoBehaviour
 
     IEnumerator InvincibleControl(float duration, float interval = 0.1f)
     {
-        Debug.Log("InvincibleControl : duration = " + duration);
+        //Debug.Log("InvincibleControl : duration = " + duration);
 
         isInvincible = true;        
         

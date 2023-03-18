@@ -52,7 +52,8 @@ public class RepeatGround : RepeatObjects
                     objects[i] = nextGround;
 
                     // 아이템 생성
-                    if (spwanedGroundCount != 0 && spwanedGroundCount % ItemSpwanInterval == 0)
+                    if ((ItemSpwanInterval != 1 && spwanedGroundCount != 0) || ItemSpwanInterval == 1
+                        && spwanedGroundCount % ItemSpwanInterval == 0)
                     {
                         Transform spwanPoint;
                         float ran = Random.Range(0f, 1f);

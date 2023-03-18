@@ -689,7 +689,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &215736331
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1449,7 +1449,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -12, y: 0}
+  m_AnchoredPosition: {x: -20, y: 0}
   m_SizeDelta: {x: 16, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &477887074
@@ -2868,7 +2868,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 10
+  m_SortingOrder: 101
   m_Sprite: {fileID: 21300000, guid: 8f910bce4db797d4f8aa5b7bee75f465, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -3643,6 +3643,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameSpeed: 1
   state: 0
+  drillDist: 0
 --- !u!4 &1034234446
 Transform:
   m_ObjectHideFlags: 0
@@ -3684,12 +3685,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startPoint: {fileID: 1234142494}
   endPoint: {fileID: 2018772445}
-  total_icon: {fileID: 0}
+  total_icon: {fileID: 1647314808}
   drill_icon: {fileID: 477887073}
   player_icon: {fileID: 1456336563}
-  DrillProgressPerSec: 0.5
-  drillProgress: 0
-  playerProgress: 0
+  curr_Progress: 0
   holdPlayerTimeLeft: 0
 --- !u!1 &1046450210
 GameObject:
@@ -4466,7 +4465,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   move: 1
   speed: 200
-  originPos: {x: 0, y: 0, z: 0}
+  closePos: {x: 0, y: 0, z: 0}
+  farPos: {x: 0, y: 0, z: 0}
+  centerPos: {x: 0, y: 0, z: 0}
   moveDrill: 0
 --- !u!1 &1456336562
 GameObject:
@@ -6517,7 +6518,7 @@ MonoBehaviour:
   elevator: {fileID: 0}
   isRepeating: 1
   spwanedGroundCount: 0
-  ItemSpwanInterval: 3
+  ItemSpwanInterval: 1
 --- !u!114 &1502916933
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6672,7 +6673,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1647314808}
   m_Layer: 5
-  m_Name: GameObject
+  m_Name: ProgressIcons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

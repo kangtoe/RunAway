@@ -5,48 +5,46 @@ using UnityEngine;
 public class ProgressBar : MonoBehaviour
 {
     [SerializeField]
-    Transform startPoint;
+    RectTransform startPoint;
     [SerializeField]
-    Transform endPoint;
+    RectTransform endPoint;
 
     [SerializeField]
-    Transform total_icon;
+    RectTransform total_icon;
     [SerializeField]
-    Transform drill_icon;
+    RectTransform drill_icon;
     [SerializeField]
-    Transform player_icon;
-
-    float startProgress = 0;
-    float endProgress = 100;
-    float playerStartProgress = 5f; // 기본값 : 5?
-    float playerProgressPerSec = 0.5f;
-    public float DrillProgressPerSec = 0.5f;
-
-    Animator playerIconAnim;
-
-    [SerializeField]
-    float drillProgress = 0;
-    [SerializeField]
-    float playerProgress = 0;
+    RectTransform player_icon;
+    
+    [SerializeField][Range(0, 1)]
+    float curr_Progress = 0f; // 0 ~ 1
 
     [Header("플레이어 진행 중지 기간")] // 이 값이 0보다 크다면, 플레이어는 이동 중이 아님
     [SerializeField]
     float holdPlayerTimeLeft = 0;
 
-    GameManager GameManager => GameManager.Instance;
+    float progressPerSec = 0.005f;
+    
+    Animator playerIconAnim;
 
-    public bool isFullProgress => playerProgress >= endProgress;
+    float farDist = 20;
+    float closeDist = 12;
+    float impactDist = 0;
+
+    public bool isFullProgress => curr_Progress >= 1;
+
+    GameManager GameManager => GameManager.Instance;
+    
 
     // Start is called before the first frame update
     void Start()
     {
-        playerProgress = playerStartProgress;
         playerIconAnim = player_icon.GetComponent<Animator>();
     }
 
     void Update()
     {
-        if (!GameManager.IsPlaying && !GameManager.IsInCutScene) return;
+        if (!GameManager.IsPlaying) return;
 
         // 플레이어
         {
@@ -64,35 +62,48 @@ public class ProgressBar : MonoBehaviour
 
             if (holdPlayerTimeLeft == 0)
             {
-                if (playerProgress < endProgress)
+                if (curr_Progress < 1)
                 {
-                    playerProgress += playerProgressPerSec * Time.deltaTime;
+                    curr_Progress += progressPerSec * Time.deltaTime;
                 }
 
-                if (playerProgress > endProgress) playerProgress = endProgress;
+                if (curr_Progress > 1) curr_Progress = 1;
 
-                Vector3 playerPos = Vector3.Lerp(startPoint.position, endPoint.position, playerProgress / endProgress);
-                player_icon.position = playerPos;
+                Vector3 iconPos = Vector3.Lerp(startPoint.anchoredPosition, endPoint.anchoredPosition, curr_Progress);
+                total_icon.anchoredPosition = iconPos;
             }
         }
+    }
 
-        // 드릴
+    public void MoveDrillIconSmooth(DrillDistanceState state, float duration = 1)
+    {
+        float dist = 0;
+        if (state == DrillDistanceState.far) dist = farDist;
+        else if (state == DrillDistanceState.close) dist = closeDist;
+        else if (state == DrillDistanceState.impact) dist = impactDist;
+        else Debug.Log("undefined state!");
+
+        StopAllCoroutines();
+        StartCoroutine(MoveDrillIconSmoothCr(dist, duration));
+    }
+
+    IEnumerator MoveDrillIconSmoothCr(float dist, float duration)
+    {
+        float t = 0;
+
+        Vector2 startPos = drill_icon.anchoredPosition;
+        Vector2 targetPos = player_icon.anchoredPosition - Vector2.right * dist;
+
+        while (t <= 1)
         {
-            if (drillProgress < endProgress)
-            {
-                drillProgress += DrillProgressPerSec * Time.deltaTime;
-            }
+            t += Time.deltaTime / duration;
+            if (t > 1) t = 1;
 
-            if (drillProgress > endProgress)
-            {
-                drillProgress = endProgress;
-            }
+            Vector2 iconPos = Vector3.Lerp(startPos, targetPos, t);
+            drill_icon.anchoredPosition = iconPos;
 
-
-            Vector3 drillPos = Vector3.Lerp(startPoint.position, endPoint.position, drillProgress / endProgress);
-            drill_icon.position = drillPos;
-        }
-
+            yield return null;
+        }    
     }
 
     public void SetHoldTime(float f)

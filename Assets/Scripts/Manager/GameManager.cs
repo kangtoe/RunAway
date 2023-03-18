@@ -4,6 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+public enum DrillDistanceState
+{ 
+    far,
+    close,
+    impact
+}
+
 public enum GameState
 { 
     ready = 0,
@@ -35,18 +42,21 @@ public class GameManager : MonoBehaviour
 
     RepeatGround repeatGround;
     ProgressBar progressBar;
-
-    Drill drill;
-    float drillMove = 7f;    
-
+    
     float startGameSpeed = 1;
     [SerializeField]
     float gameSpeed = 1f; // 기본값 1
     float maxGameSpeed = 5f;
-    public float GameSpeed => gameSpeed;
+    public float GameSpeed => gameSpeed;    
 
     [SerializeField]
     GameState state = GameState.ready;
+
+    Drill drill;
+    float drillMove = 7f;
+    [SerializeField]
+    DrillDistanceState drillDist = DrillDistanceState.far;
+    public DrillDistanceState DrillDist => drillDist;
 
     UiManager UiManager => UiManager.Instance;
 
@@ -84,6 +94,7 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
+        UiManager.SetInGameUIs(true);
         state = GameState.play;              
     }
 
@@ -135,13 +146,20 @@ public class GameManager : MonoBehaviour
 
     public void SetGameSpeed(float f)
     {
+        Debug.Log("SetGameSpeed : " + f);
+
         if (f > maxGameSpeed) Debug.Log("set speed > maxGameSpeed! : " + f);
         //if (f < startGameSpeed) Debug.Log("set speed < startGameSpeed! : " + f);        
 
         gameSpeed = f;        
     }
 
+    
+
     #region 컷신연출
+
+    float drillMoveDuration = 3f;
+
 
     public void PlayStartCutScene()
     {
@@ -150,19 +168,12 @@ public class GameManager : MonoBehaviour
             Debug.Log("can play StartCutScene On ready state!");
             return;
         }
-
-        UiManager.SetInGameUIs(true);
+        
         UiManager.SetStartUi(false);
-
-        float duration = 3f;
+        
         state = GameState.playWait;
-        StartCoroutine(StartCutSceneCr(duration));
-    }
-
-    public void SetDrillProgressPerSec(float f)
-    {
-        progressBar.DrillProgressPerSec = f;
-    }
+        StartCoroutine(StartCutSceneCr(drillMoveDuration));
+    }    
 
     IEnumerator StartCutSceneCr(float duration)
     {
@@ -170,13 +181,17 @@ public class GameManager : MonoBehaviour
 
         float t = 0;
         drill.moveDrill = false;
+        Vector3 startPos = drill.centerPos;
         while (true)
         {
             t += Time.fixedDeltaTime / duration;
             if (t > 1) t = 1;
+
+            drill.centerPos = Vector3.Lerp(startPos, drill.farPos, t);
+
             if (t == 1) break;
 
-            drill.originPos -= Vector3.right * Time.fixedDeltaTime / duration * drillMove;            
+            drill.centerPos -= Vector3.right * Time.fixedDeltaTime / duration * drillMove;            
 
             yield return new WaitForFixedUpdate();
         }
@@ -185,11 +200,6 @@ public class GameManager : MonoBehaviour
         SetGameSpeed(1);
 
         StartGame();
-    }
-
-    public void PlayOverCutScene()
-    {
-
     }
 
     public void PlayClearCutScene()
@@ -201,16 +211,77 @@ public class GameManager : MonoBehaviour
         Invoke(nameof(GameClear), clearWait);        
     }
 
-    IEnumerator ClearCutSceneCr(float duaration)
+    IEnumerator ClearCutSceneCr(float duration)
     {
         float move = 0.25f;
 
         while (true)
         {
-            repeatGround.Elevator.Translate(0, move * Time.deltaTime / duaration, 0);
+            repeatGround.Elevator.Translate(0, move * Time.deltaTime / duration, 0);
             yield return null;
         }                
     }
 
     #endregion 컷신연출
+
+    #region 드릴이동
+    bool drillOnMove = false;
+
+    public void SetDrillDistance(DrillDistanceState _drillDist, float duration = 1)
+    {
+        //Debug.Log("SetDrillDistance");
+
+        if (_drillDist == drillDist)
+        {
+            Debug.Log("already int drill dist state : " + drillDist);
+        }
+
+        drillDist = _drillDist;
+        progressBar.MoveDrillIconSmooth(_drillDist, duration);
+
+        StartCoroutine(MoveDrillCr(duration, _drillDist));
+        
+    }
+
+    IEnumerator MoveDrillCr(float duration, DrillDistanceState dist)
+    {
+        Debug.Log("MoveDrillCr : " + dist);
+
+        float t = 0;
+        drill.moveDrill = true;
+
+        Vector3 startPos = drill.centerPos;
+        Vector3 movePos;
+        if (dist == DrillDistanceState.far) movePos = drill.farPos;
+        else if (dist == DrillDistanceState.close) movePos = drill.closePos;
+        else if (dist == DrillDistanceState.impact) movePos = drill.centerPos + Vector3.right * 100;
+        else
+        {
+            Debug.Log("undefined dist!");
+            yield break;
+        }
+
+        drillOnMove = true;
+        while (true)
+        {
+            t += Time.fixedDeltaTime / duration;
+            if (t > 1) t = 1;
+
+            drill.centerPos = Vector3.Lerp(startPos, movePos, t);
+
+            if (t == 1) break;
+
+            drill.centerPos -= Vector3.right * Time.fixedDeltaTime / duration * drillMove;
+
+            yield return new WaitForFixedUpdate();
+        }
+        drillOnMove = false;
+        //drill.moveDrill = true;
+
+    }
+
+    #endregion 드릴이동
+
+
+
 }

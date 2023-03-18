@@ -18,6 +18,12 @@ public class BoostItem : ItemBase
     public override void UseItem(PlayerCharacter user)
     {
         user.StartBoost(boostTime, boostAmount);
+
+        if (GameManager.Instance.DrillDist == DrillDistanceState.close)
+        {
+            GameManager.Instance.SetDrillDistance(DrillDistanceState.far);
+        }
+
         Destroy(gameObject);
     }
 }
