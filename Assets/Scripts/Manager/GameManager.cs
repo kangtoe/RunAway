@@ -59,13 +59,14 @@ public class GameManager : MonoBehaviour
     public DrillDistanceState DrillDist => drillDist;
 
     UiManager UiManager => UiManager.Instance;
+    SoundManager SoundManager => SoundManager.Instance;
 
     public bool IsPlaying => state == GameState.play ? true : false;
     public bool IsInCutScene => state == GameState.playWait ? true : false;
     public bool IsInPreClearWait => state == GameState.preClearWait ? true : false;
 
     void Start()
-    {
+    {        
         UiManager.SetPauseUi(false);
         UiManager.SetInGameUIs(false);
         UiManager.SetStartUi(true);                
@@ -93,7 +94,7 @@ public class GameManager : MonoBehaviour
     }
 
     public void StartGame()
-    {
+    {              
         UiManager.SetInGameUIs(true);
         state = GameState.play;              
     }
@@ -101,13 +102,15 @@ public class GameManager : MonoBehaviour
     public void TogglePause()
     {
         if (state == GameState.play)
-        {            
+        {
+            SoundManager.PlaySound("pause");
             state = GameState.pause;
             UiManager.SetPauseUi(true);
             Time.timeScale = 0;
         }
         else if (state == GameState.pause)
         {
+            SoundManager.PlaySound("resume");
             state = GameState.play;
             UiManager.SetPauseUi(false);
             Time.timeScale = 1;
@@ -146,7 +149,7 @@ public class GameManager : MonoBehaviour
 
     public void SetGameSpeed(float f)
     {
-        Debug.Log("SetGameSpeed : " + f);
+        //Debug.Log("SetGameSpeed : " + f);
 
         if (f > maxGameSpeed) Debug.Log("set speed > maxGameSpeed! : " + f);
         //if (f < startGameSpeed) Debug.Log("set speed < startGameSpeed! : " + f);        
@@ -168,7 +171,8 @@ public class GameManager : MonoBehaviour
             Debug.Log("can play StartCutScene On ready state!");
             return;
         }
-        
+
+        SoundManager.PlaySound("start");
         UiManager.SetStartUi(false);
         
         state = GameState.playWait;
@@ -204,16 +208,24 @@ public class GameManager : MonoBehaviour
 
     public void PlayClearCutScene()
     {
+        if (state == GameState.clearWait)
+        {
+            Debug.Log("alreadt in state : " + state);
+            return;
+        }
+        state = GameState.clearWait;
+
+        SoundManager.PlaySound("clear");
         SetGameSpeed(0);
 
-        float clearWait = 5f;
+        float clearWait = 3f;
         StartCoroutine(ClearCutSceneCr(clearWait));
         Invoke(nameof(GameClear), clearWait);        
     }
 
     IEnumerator ClearCutSceneCr(float duration)
     {
-        float move = 0.25f;
+        float move = 12f;
 
         while (true)
         {
@@ -234,6 +246,7 @@ public class GameManager : MonoBehaviour
         if (_drillDist == drillDist)
         {
             Debug.Log("already int drill dist state : " + drillDist);
+            return;
         }
 
         drillDist = _drillDist;

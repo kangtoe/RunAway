@@ -34,10 +34,10 @@ public class PlayerCharacter : MonoBehaviour
     int currentJumpCount;
     bool isGrounded;
     bool isSliding;
-    bool isDead;
-    [SerializeField]
+    bool isDead;    
     bool isInvincible;
     bool isOnHit;
+    bool isOnSlam;
     bool isShielded;
     bool isBoosted;
 
@@ -50,6 +50,9 @@ public class PlayerCharacter : MonoBehaviour
     InputManager InputManager => InputManager.Instance;
     GameManager GameManager => GameManager.Instance;
     UiManager UiManager => UiManager.Instance;
+    SoundManager SoundManager => SoundManager.Instance;
+    CameraManager CameraManager => CameraManager.Instance;
+
 
     #region 유니티 라이프 사이클
 
@@ -101,10 +104,10 @@ public class PlayerCharacter : MonoBehaviour
         if (collision.gameObject.layer == LayerMask.NameToLayer("ClearTrigger"))
         {
             //Debug.Log("Clear");
-
+            
             anim.SetBool("idle", true);
-            GameManager.PlayClearCutScene();
-            //GameManager.GameClear();
+            UiManager.SetInGameUIs(false);
+            GameManager.PlayClearCutScene();            
         }
 
         if (collision.gameObject.layer == LayerMask.NameToLayer("Item"))
@@ -118,14 +121,18 @@ public class PlayerCharacter : MonoBehaviour
             Hit();
         }
 
-        if (collision.gameObject.layer == LayerMask.NameToLayer("DeadZone") ||
-        collision.gameObject.layer == LayerMask.NameToLayer("Drill"))
+        if (collision.gameObject.layer == LayerMask.NameToLayer("DeadZone"))
         {
+            SoundManager.PlaySound("gameover");
             GameManager.SetDrillDistance(DrillDistanceState.impact);
 
             Die();
-            anim.SetBool("die", true);
-            GameManager.GameOver();
+            
+        }
+
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Drill"))
+        {            
+            Die();
         }
     }
 
@@ -139,7 +146,8 @@ public class PlayerCharacter : MonoBehaviour
             {
                 rb.velocity = Vector2.zero;
             }
-            
+
+            if (isOnSlam) isOnSlam = false;
             isGrounded = true;
             currentJumpCount = 0;
             anim.SetBool("jump", !isGrounded);
@@ -164,6 +172,7 @@ public class PlayerCharacter : MonoBehaviour
         if (currentJumpCount >= maxJumpCount) return;
         if (isSliding) OnEndSlide();
 
+        SoundManager.PlaySound("jump");
         UiManager.SetRightBtnTxt("down");
 
         rb.velocity = Vector2.zero;
@@ -187,6 +196,7 @@ public class PlayerCharacter : MonoBehaviour
 
     public void OnStartSlide()
     {
+        SoundManager.PlaySound("slide", SoundType.Bgm);
         anim.SetBool("slide", true);
         isSliding = true;
 
@@ -196,6 +206,7 @@ public class PlayerCharacter : MonoBehaviour
 
     public void OnEndSlide()
     {
+        SoundManager.StopSound("slide");
         isSliding = false;
         anim.SetBool("slide", false);
 
@@ -214,6 +225,14 @@ public class PlayerCharacter : MonoBehaviour
             return;
         }
 
+        if (isOnSlam)
+        {
+            Debug.Log("already on slam");
+            return;
+        }
+
+        isOnSlam = true;
+        SoundManager.PlaySound("slam");
         rb.velocity = Vector2.zero;
         rb.AddForce(new Vector2(0, -slamForce), ForceMode2D.Impulse);
     }
@@ -225,10 +244,15 @@ public class PlayerCharacter : MonoBehaviour
     void Die()
     {
         Debug.Log("Die");
-
+                
         StopAllCoroutines();
         if (isOnHit) OnEndHit();
+
+        UiManager.SetInGameUIs(false);
         GameManager.SetGameSpeed(0);
+        GameManager.GameOver();
+
+        anim.SetBool("die", true);
 
         isDead = true;
         rb.velocity = Vector2.zero;
@@ -252,12 +276,13 @@ public class PlayerCharacter : MonoBehaviour
             GameManager.HoldPlayerProgress(hitHoldTime);
         }
 
-        CameraManager.Instance.Shake();
+        SoundManager.PlaySound("hit");
+        CameraManager.Shake();
     }
 
     IEnumerator HitCr(float duration)
     {
-        Debug.Log("HitCr : " + duration);
+        //Debug.Log("HitCr : " + duration);
 
         if (GameManager.DrillDist == DrillDistanceState.far)
         {
@@ -265,7 +290,7 @@ public class PlayerCharacter : MonoBehaviour
         }
         else if (GameManager.DrillDist == DrillDistanceState.close)
         {
-            GameManager.SetDrillDistance(DrillDistanceState.impact);
+            GameManager.SetDrillDistance(DrillDistanceState.impact, 3);
         }
 
         OnStartHit();        

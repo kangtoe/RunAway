@@ -9,6 +9,7 @@ public class ScoreItem : ItemBase
 
     public override void UseItem(PlayerCharacter user)
     {
+        SoundManager.Instance.PlaySound("item");
         ScoreManager.Instance.AddScore(addScore);
         Destroy(gameObject);
     }
