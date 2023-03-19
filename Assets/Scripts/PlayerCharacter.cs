@@ -227,7 +227,7 @@ public class PlayerCharacter : MonoBehaviour
 
         if (isOnSlam)
         {
-            Debug.Log("already on slam");
+            //Debug.Log("already on slam");
             return;
         }
 
