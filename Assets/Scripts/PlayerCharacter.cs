@@ -2,12 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum ColliderType
+{ 
+    allDisable,
+    stand,
+    slide,
+    jump,
+}
+
 public class PlayerCharacter : MonoBehaviour
 {
     [SerializeField]
     Collider2D standCollider;
     [SerializeField]
     Collider2D slideCollider;
+    [SerializeField]
+    Collider2D jumpCollider;
 
     [SerializeField]
     GameObject jumpEfx;
@@ -40,11 +50,11 @@ public class PlayerCharacter : MonoBehaviour
     bool isOnSlam;
     bool isShielded;
     bool isBoosted;
-
-    Vector2 startPos;
+    
+    [SerializeField]
+    Transform footPoint;
     Rigidbody2D rb;
     Animator anim;
-    AudioSource AudioSource;
     SpriteRenderer SpriteRenderer;
 
     InputManager InputManager => InputManager.Instance;
@@ -62,12 +72,14 @@ public class PlayerCharacter : MonoBehaviour
         anim = GetComponent<Animator>();
         SpriteRenderer = GetComponent<SpriteRenderer>();
 
-        slideCollider.enabled = false;
+        ActiveCollider(ColliderType.stand);        
     }
 
 
     void Update()
     {
+        
+
         float animSpeed = GameManager.GameSpeed;
         anim.SetFloat("animSpeed", animSpeed);
 
@@ -82,9 +94,13 @@ public class PlayerCharacter : MonoBehaviour
             TryJump();
         }
 
-        if (InputManager.SlideInput)
+        if (InputManager.SlamInput)
         {
             if (!isGrounded) Slam();
+        }
+
+        if (InputManager.SlideInput)
+        {             
             if (!isSliding) OnStartSlide();
 
         }
@@ -93,6 +109,7 @@ public class PlayerCharacter : MonoBehaviour
             if (isSliding) OnEndSlide();
         }
 
+        GroundCheck();
     }
 
     void OnTriggerStay2D(Collider2D collision)
@@ -139,21 +156,22 @@ public class PlayerCharacter : MonoBehaviour
     void OnCollisionEnter2D(Collision2D collision)
     {
         // 발 부분 충돌 시에만 착지 판정
-        if (collision.contacts[0].normal.y > 0.5f)
-        {
-            // 하강 중
-            if (rb.velocity.y < 0)
-            {
-                rb.velocity = Vector2.zero;
-            }
+        //if (collision.contacts[0].normal.y > 0.5f)
+        //{
+        //    // 착지 시 낙하속도 0으로 (바닥을 뚫지 않도록)
+        //    if (rb.velocity.y < 0)
+        //    {
+        //        rb.velocity = Vector2.zero;
+        //    }
 
-            if (isOnSlam) isOnSlam = false;
-            isGrounded = true;
-            currentJumpCount = 0;
-            anim.SetBool("jump", !isGrounded);
+        //    ActiveCollider(ColliderType.stand);
+        //    if (isOnSlam) isOnSlam = false;
+        //    isGrounded = true;
+        //    currentJumpCount = 0;
+        //    anim.SetBool("jump", !isGrounded);
 
-            UiManager.SetRightBtnTxt("slide");
-        }
+        //    UiManager.SetRightBtnTxt("slide");
+        //}
     }
 
     void OnCollisionExit2D(Collision2D collision)
@@ -165,6 +183,32 @@ public class PlayerCharacter : MonoBehaviour
 
     #region 점프 & 슬라이드 & 하강
 
+    void GroundCheck()
+    {
+        if (!GameManager.IsPlaying) return;
+        if (isGrounded) return;
+        if (rb.velocity.y > 0) return;
+
+        // 발 부분 충돌 시에만 착지 판정
+        float radius = 0.1f;
+        Collider2D coll = Physics2D.OverlapCircle(footPoint.position, radius);
+        if (!coll || coll.transform.parent == transform) return;
+
+        Debug.Log("GroundChecked || coll : " + coll.name);
+
+        // 착지 시 낙하속도 0으로 (바닥을 뚫지 않도록)
+        rb.velocity = Vector2.zero;        
+
+        ActiveCollider(ColliderType.stand);
+        if (isOnSlam) isOnSlam = false;
+        isGrounded = true;
+        currentJumpCount = 0;
+        anim.SetBool("jump", !isGrounded);
+
+        UiManager.SetSlideBtn();
+        //UiManager.SetRightBtnTxt("slide");
+    }
+
     public void TryJump()
     {
         if (isDead) return;
@@ -172,8 +216,13 @@ public class PlayerCharacter : MonoBehaviour
         if (currentJumpCount >= maxJumpCount) return;
         if (isSliding) OnEndSlide();
 
+        Debug.Log("jump");
+
+        ActiveCollider(ColliderType.jump);
         SoundManager.PlaySound("jump");
-        UiManager.SetRightBtnTxt("down");
+
+        UiManager.SetSlamBtn();
+        //UiManager.SetRightBtnTxt("down");
 
         rb.velocity = Vector2.zero;
         rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
@@ -196,12 +245,13 @@ public class PlayerCharacter : MonoBehaviour
 
     public void OnStartSlide()
     {
+        Debug.Log("OnStartSlide");
+
         SoundManager.PlaySound("slide", SoundType.Bgm);
         anim.SetBool("slide", true);
         isSliding = true;
 
-        standCollider.enabled = false;
-        slideCollider.enabled = true;
+        ActiveCollider(ColliderType.slide);        
     }
 
     public void OnEndSlide()
@@ -210,14 +260,13 @@ public class PlayerCharacter : MonoBehaviour
         isSliding = false;
         anim.SetBool("slide", false);
 
-        standCollider.enabled = true;
-        slideCollider.enabled = false;
+        ActiveCollider(ColliderType.stand);        
     }
 
     // 체공 중 바닥으로 빠르게 하강
     void Slam()
     {
-        //Debug.Log("slam");
+        Debug.Log("slam");
 
         if (isGrounded)
         {
@@ -231,6 +280,7 @@ public class PlayerCharacter : MonoBehaviour
             return;
         }
 
+        // 애니메이션 상태 전이
         isOnSlam = true;
         SoundManager.PlaySound("slam");
         rb.velocity = Vector2.zero;
@@ -258,8 +308,7 @@ public class PlayerCharacter : MonoBehaviour
         rb.velocity = Vector2.zero;
         rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
 
-        slideCollider.enabled = false;
-        standCollider.enabled = false;
+        ActiveCollider(ColliderType.allDisable);
     }
 
     void Hit()
@@ -396,5 +445,17 @@ public class PlayerCharacter : MonoBehaviour
     {
         StopAllCoroutines();
         StartCoroutine(BoostControl(duration, boostAmount));
+    }
+    
+    void ActiveCollider(ColliderType type)
+    {
+        standCollider.enabled = false;
+        slideCollider.enabled = false;
+        jumpCollider.enabled = false;
+
+        if (type == ColliderType.stand) standCollider.enabled = true;
+        else if (type == ColliderType.slide) slideCollider.enabled = true;
+        else if (type == ColliderType.jump) jumpCollider.enabled = true;
+        else Debug.Log("undefined collider type!");
     }
 }

@@ -28,6 +28,10 @@ public class InputManager : MonoBehaviour
     public bool JumpInput => jumpinput; // || Input.GetButtonDown("Jump");
     bool jumpinput = false;
 
+    // 버튼 클릭한 프레임에만 입력 값이 참
+    public bool SlamInput => slamInput;
+    bool slamInput = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -43,6 +47,7 @@ public class InputManager : MonoBehaviour
     void LateUpdate()
     {
         jumpinput = false;
+        slamInput = false;
     }
 
     public void SetSlideInput(bool active)
@@ -53,5 +58,10 @@ public class InputManager : MonoBehaviour
     public void SetJumpInput(bool active)
     {
         jumpinput = active;
+    }
+
+    public void SetSlamInput(bool active)
+    {
+        slamInput = active;
     }
 }

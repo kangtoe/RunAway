@@ -36,6 +36,12 @@ public class UiManager : MonoBehaviour
     Text rightBtnTxt;
 
     [SerializeField]
+    GameObject slideBtn;
+
+    [SerializeField]
+    GameObject slamBtn;
+
+    [SerializeField]
     GameObject[] inGameUis;
 
     public void SetStartUi(bool active)
@@ -61,10 +67,26 @@ public class UiManager : MonoBehaviour
     public void SetInGameUIs(bool active)
     {
         foreach (GameObject go in inGameUis) { go.SetActive(active); }
+
+        if (active) SetSlideBtn();
     }
 
     public void SetRightBtnTxt(string str)
     {
         rightBtnTxt.text = str;
+    }
+
+    public void SetSlamBtn()
+    {
+        slideBtn.SetActive(false);
+        slamBtn.SetActive(true);        
+    }
+
+    public void SetSlideBtn()
+    {
+        //Debug.Log("SetSlideBtn");
+
+        slideBtn.SetActive(true);
+        slamBtn.SetActive(false);
     }
 }
