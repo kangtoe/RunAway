@@ -2,10 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum CharacterState
+{ 
+    running,
+    sliding,
+    jumping,
+    OnHit,
+    OnSlam,
+    Dead,
+}
+
 
 public enum ColliderType
 { 
-    allDisable,
+    none,
     stand,
     slide,
     jump,
@@ -44,8 +54,7 @@ public class PlayerCharacter : MonoBehaviour
     //int lifeCount;
     int currentJumpCount;
     bool isGrounded;
-    bool isSliding;   
-    [SerializeField]
+    bool isSliding;       
     bool isDead;    
     bool isInvincible;
     bool isOnHit;
@@ -311,7 +320,7 @@ public class PlayerCharacter : MonoBehaviour
         rb.velocity = Vector2.zero;
         rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
 
-        ActiveCollider(ColliderType.allDisable);
+        ActiveCollider(ColliderType.none);
     }
 
     void Hit()
