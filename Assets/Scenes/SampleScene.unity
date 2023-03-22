@@ -3295,6 +3295,7 @@ MonoBehaviour:
   maxJumpCount: 2
   hitHoldTime: 1
   hitInvincibleTime: 0.5
+  isDead: 0
   footPoint: {fileID: 306291300}
 --- !u!1 &869371706
 GameObject:

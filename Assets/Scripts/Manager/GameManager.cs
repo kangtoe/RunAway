@@ -80,6 +80,11 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            TogglePause();
+        }
+
         if (state == GameState.play)
         {            
             if(gameSpeed < maxGameSpeed) gameSpeed += Time.deltaTime * 0.01f;

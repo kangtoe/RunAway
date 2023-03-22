@@ -44,6 +44,7 @@ public class UiManager : MonoBehaviour
     [SerializeField]
     GameObject[] inGameUis;
 
+
     public void SetStartUi(bool active)
     {
         startUI.SetActive(active);

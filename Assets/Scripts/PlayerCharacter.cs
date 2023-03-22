@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public enum ColliderType
 { 
     allDisable,
@@ -28,7 +29,7 @@ public class PlayerCharacter : MonoBehaviour
     [SerializeField]
     float jumpForce;
     [SerializeField]
-    float slamForce;
+    float slamForce;    
     [SerializeField]
     int maxJumpCount = 1;
 
@@ -38,19 +39,20 @@ public class PlayerCharacter : MonoBehaviour
 
     [Header("피격 후 무적시간")]
     [SerializeField]
-    float hitInvincibleTime = 0.5f;
+    float hitInvincibleTime = 0.5f;    
 
     //int lifeCount;
     int currentJumpCount;
     bool isGrounded;
-    bool isSliding;
+    bool isSliding;   
+    [SerializeField]
     bool isDead;    
     bool isInvincible;
     bool isOnHit;
     bool isOnSlam;
     bool isShielded;
-    bool isBoosted;
-    
+    bool isBoosted;    
+
     [SerializeField]
     Transform footPoint;
     Rigidbody2D rb;
@@ -77,16 +79,16 @@ public class PlayerCharacter : MonoBehaviour
 
 
     void Update()
-    {
-        
-
+    {        
         float animSpeed = GameManager.GameSpeed;
         anim.SetFloat("animSpeed", animSpeed);
 
+        if (!GameManager.IsPlaying) return;
         if (isDead) return;
 
         anim.SetFloat("velocityY", rb.velocity.y);
 
+        GroundCheck();
         if (isOnHit) return;
 
         if (InputManager.JumpInput)
@@ -109,7 +111,7 @@ public class PlayerCharacter : MonoBehaviour
             if (isSliding) OnEndSlide();
         }
 
-        GroundCheck();
+        
     }
 
     void OnTriggerStay2D(Collider2D collision)
@@ -253,7 +255,7 @@ public class PlayerCharacter : MonoBehaviour
 
         ActiveCollider(ColliderType.slide);        
     }
-
+    
     public void OnEndSlide()
     {
         SoundManager.StopSound("slide");
@@ -285,6 +287,7 @@ public class PlayerCharacter : MonoBehaviour
         SoundManager.PlaySound("slam");
         rb.velocity = Vector2.zero;
         rb.AddForce(new Vector2(0, -slamForce), ForceMode2D.Impulse);
+        ActiveCollider(ColliderType.stand);
     }
 
     #endregion 점프 & 슬라이드 & 하강

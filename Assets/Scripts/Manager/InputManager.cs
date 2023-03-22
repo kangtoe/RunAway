@@ -21,15 +21,15 @@ public class InputManager : MonoBehaviour
     private static InputManager instance;    
 
     // 버튼 유지 시 계속 입력 값은 참
-    public bool SlideInput => slideinput;
+    public bool SlideInput => slideinput || Input.GetKey(KeyCode.L);
     bool slideinput = false;
 
     // 버튼 클릭한 프레임에만 입력 값이 참
-    public bool JumpInput => jumpinput; // || Input.GetButtonDown("Jump");
+    public bool JumpInput => jumpinput || Input.GetKeyDown(KeyCode.K);
     bool jumpinput = false;
 
     // 버튼 클릭한 프레임에만 입력 값이 참
-    public bool SlamInput => slamInput;
+    public bool SlamInput => slamInput || Input.GetKeyDown(KeyCode.L);
     bool slamInput = false;
 
     // Start is called before the first frame update
