@@ -4,12 +4,13 @@ using UnityEngine;
 
 public enum CharacterState
 { 
-    running,
-    sliding,
-    jumping,
+    Running,
+    Sliding,
+    Jumping,
     OnHit,
     OnSlam,
     Dead,
+    Idle,
 }
 
 
@@ -60,7 +61,9 @@ public class PlayerCharacter : MonoBehaviour
     bool isOnHit;
     bool isOnSlam;
     bool isShielded;
-    bool isBoosted;    
+    bool isBoosted;
+
+    CharacterState state;
 
     [SerializeField]
     Transform footPoint;
@@ -83,9 +86,10 @@ public class PlayerCharacter : MonoBehaviour
         anim = GetComponent<Animator>();
         SpriteRenderer = GetComponent<SpriteRenderer>();
 
-        ActiveCollider(ColliderType.stand);        
+        ActiveCollider(ColliderType.stand);
+        
+        state = CharacterState.Running;
     }
-
 
     void Update()
     {        
@@ -93,34 +97,38 @@ public class PlayerCharacter : MonoBehaviour
         anim.SetFloat("animSpeed", animSpeed);
 
         if (!GameManager.IsPlaying) return;
-        if (isDead) return;
+
+        //if (isDead) return;
+        if (state == CharacterState.Dead) return;
+        //if (isOnHit) return;
+        if (state == CharacterState.OnHit) return;        
 
         anim.SetFloat("velocityY", rb.velocity.y);
+        if (!isGrounded) GroundCheck();        
 
-        GroundCheck();
-        if (isOnHit) return;
-
-        if (InputManager.JumpInput)
+        if (isGrounded)
         {
-            TryJump();
-        }
-
-        if (InputManager.SlamInput)
-        {
-            if (!isGrounded) Slam();
-        }
-
-        if (InputManager.SlideInput)
-        {             
-            if (!isSliding) OnStartSlide();
-
+            if (InputManager.JumpInput)
+            {
+                TryJump();
+            }
         }
         else
         {
-            if (isSliding) OnEndSlide();
+            if (InputManager.SlamInput)
+            {
+                Slam();
+            }
         }
-
-        
+              
+        if (InputManager.SlideInput)
+        {             
+            if (state == CharacterState.Sliding) OnStartSlide();
+        }
+        else
+        {
+            if (state == CharacterState.Sliding) OnEndSlide();
+        }        
     }
 
     void OnTriggerStay2D(Collider2D collision)
@@ -164,68 +172,19 @@ public class PlayerCharacter : MonoBehaviour
         }
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        // 발 부분 충돌 시에만 착지 판정
-        //if (collision.contacts[0].normal.y > 0.5f)
-        //{
-        //    // 착지 시 낙하속도 0으로 (바닥을 뚫지 않도록)
-        //    if (rb.velocity.y < 0)
-        //    {
-        //        rb.velocity = Vector2.zero;
-        //    }
-
-        //    ActiveCollider(ColliderType.stand);
-        //    if (isOnSlam) isOnSlam = false;
-        //    isGrounded = true;
-        //    currentJumpCount = 0;
-        //    anim.SetBool("jump", !isGrounded);
-
-        //    UiManager.SetRightBtnTxt("slide");
-        //}
-    }
-
-    void OnCollisionExit2D(Collision2D collision)
-    {
-        //isGrounded = false;
-    }
-
     #endregion 유니티 라이프 사이클    
 
-    #region 점프 & 슬라이드 & 하강
-
-    void GroundCheck()
-    {
-        if (!GameManager.IsPlaying) return;
-        if (isGrounded) return;
-        if (rb.velocity.y > 0) return;
-
-        // 발 부분 충돌 시에만 착지 판정
-        float radius = 0.1f;
-        Collider2D coll = Physics2D.OverlapCircle(footPoint.position, radius);
-        if (!coll || coll.transform.parent == transform) return;
-
-        Debug.Log("GroundChecked || coll : " + coll.name);
-
-        // 착지 시 낙하속도 0으로 (바닥을 뚫지 않도록)
-        rb.velocity = Vector2.zero;        
-
-        ActiveCollider(ColliderType.stand);
-        if (isOnSlam) isOnSlam = false;
-        isGrounded = true;
-        currentJumpCount = 0;
-        anim.SetBool("jump", !isGrounded);
-
-        UiManager.SetSlideBtn();
-        //UiManager.SetRightBtnTxt("slide");
-    }
+    #region 점프
 
     public void TryJump()
     {
         if (isDead) return;
         if (isOnHit) return;
+        if (state == CharacterState.OnHit) return;
+        if (state == CharacterState.Dead) return;
         if (currentJumpCount >= maxJumpCount) return;
-        if (isSliding) OnEndSlide();
+
+        if (state == CharacterState.Sliding) OnEndSlide();
 
         Debug.Log("jump");
 
@@ -254,6 +213,10 @@ public class PlayerCharacter : MonoBehaviour
         }
     }
 
+    #endregion 점프
+
+    #region 슬라이드
+
     public void OnStartSlide()
     {
         Debug.Log("OnStartSlide");
@@ -262,17 +225,21 @@ public class PlayerCharacter : MonoBehaviour
         anim.SetBool("slide", true);
         isSliding = true;
 
-        ActiveCollider(ColliderType.slide);        
+        ActiveCollider(ColliderType.slide);
     }
-    
+
     public void OnEndSlide()
     {
         SoundManager.StopSound("slide");
         isSliding = false;
         anim.SetBool("slide", false);
 
-        ActiveCollider(ColliderType.stand);        
+        ActiveCollider(ColliderType.stand);
     }
+
+    #endregion 슬라이드
+
+    #region 강하
 
     // 체공 중 바닥으로 빠르게 하강
     void Slam()
@@ -299,29 +266,9 @@ public class PlayerCharacter : MonoBehaviour
         ActiveCollider(ColliderType.stand);
     }
 
-    #endregion 점프 & 슬라이드 & 하강
+    #endregion 강하
 
-    #region 피격 & 사망
-
-    void Die()
-    {
-        Debug.Log("Die");
-                
-        StopAllCoroutines();
-        if (isOnHit) OnEndHit();
-
-        UiManager.SetInGameUIs(false);
-        GameManager.SetGameSpeed(0);
-        GameManager.GameOver();
-
-        anim.SetBool("die", true);
-
-        isDead = true;
-        rb.velocity = Vector2.zero;
-        rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
-
-        ActiveCollider(ColliderType.none);
-    }
+    #region 피격
 
     void Hit()
     {
@@ -354,7 +301,7 @@ public class PlayerCharacter : MonoBehaviour
             GameManager.SetDrillDistance(DrillDistanceState.impact, 3);
         }
 
-        OnStartHit();        
+        OnStartHit();
 
         float t = 0;
         while (true)
@@ -368,9 +315,9 @@ public class PlayerCharacter : MonoBehaviour
             if (t == 1) break;
 
             yield return null;
-        }        
+        }
 
-        OnEndHit();        
+        OnEndHit();
     }
 
     void OnStartHit()
@@ -389,7 +336,56 @@ public class PlayerCharacter : MonoBehaviour
         anim.SetBool("onHit", false);
     }
 
-    #endregion 피격 & 사망
+    #endregion 피격
+
+    #region 사망
+    void Die()
+    {
+        Debug.Log("Die");
+
+        StopAllCoroutines();
+        if (isOnHit) OnEndHit();
+
+        UiManager.SetInGameUIs(false);
+        GameManager.SetGameSpeed(0);
+        GameManager.GameOver();
+
+        anim.SetBool("die", true);
+
+        isDead = true;
+        rb.velocity = Vector2.zero;
+        rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
+
+        ActiveCollider(ColliderType.none);
+    }
+
+    #endregion 사망
+
+    void GroundCheck()
+    {
+        if (!GameManager.IsPlaying) return;
+        if (isGrounded) return;
+        if (rb.velocity.y > 0) return;
+
+        // 발 부분 충돌 시에만 착지 판정
+        float radius = 0.1f;
+        Collider2D coll = Physics2D.OverlapCircle(footPoint.position, radius);
+        if (!coll || coll.transform.parent == transform) return;
+
+        Debug.Log("GroundChecked || coll : " + coll.name);
+
+        // 착지 시 낙하속도 0으로 (바닥을 뚫지 않도록)
+        rb.velocity = Vector2.zero;
+
+        ActiveCollider(ColliderType.stand);
+        if (isOnSlam) isOnSlam = false;
+        isGrounded = true;
+        currentJumpCount = 0;
+        anim.SetBool("jump", !isGrounded);
+
+        UiManager.SetSlideBtn();
+        //UiManager.SetRightBtnTxt("slide");
+    }
 
     IEnumerator InvincibleControl(float duration, float interval = 0.1f)
     {
@@ -418,6 +414,12 @@ public class PlayerCharacter : MonoBehaviour
         isInvincible = false;
      
         yield return null;
+    }
+
+    public void StartBoost(float duration, float boostAmount)
+    {
+        StopAllCoroutines();
+        StartCoroutine(BoostControl(duration, boostAmount));
     }
 
     IEnumerator BoostControl(float duration, float boostAmount)
@@ -451,13 +453,7 @@ public class PlayerCharacter : MonoBehaviour
     {
         shield.SetActive(active);
         isShielded = active;
-    }
-
-    public void StartBoost(float duration, float boostAmount)
-    {
-        StopAllCoroutines();
-        StartCoroutine(BoostControl(duration, boostAmount));
-    }
+    }    
     
     void ActiveCollider(ColliderType type)
     {
