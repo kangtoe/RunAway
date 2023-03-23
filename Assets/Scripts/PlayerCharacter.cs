@@ -223,7 +223,9 @@ public class PlayerCharacter : MonoBehaviour
 
         SoundManager.PlaySound("slide", SoundType.Bgm);
         anim.SetBool("slide", true);
+        
         isSliding = true;
+        state = CharacterState.Sliding;
 
         ActiveCollider(ColliderType.slide);
     }
@@ -231,7 +233,10 @@ public class PlayerCharacter : MonoBehaviour
     public void OnEndSlide()
     {
         SoundManager.StopSound("slide");
+
         isSliding = false;
+        state = CharacterState.Running;
+
         anim.SetBool("slide", false);
 
         ActiveCollider(ColliderType.stand);
@@ -259,7 +264,8 @@ public class PlayerCharacter : MonoBehaviour
         }
 
         // 애니메이션 상태 전이
-        isOnSlam = true;
+        //isOnSlam = true;
+        state = CharacterState.OnSlam;
         SoundManager.PlaySound("slam");
         rb.velocity = Vector2.zero;
         rb.AddForce(new Vector2(0, -slamForce), ForceMode2D.Impulse);
@@ -322,7 +328,8 @@ public class PlayerCharacter : MonoBehaviour
 
     void OnStartHit()
     {
-        isOnHit = true;
+        //isOnHit = true;
+        state = CharacterState.OnHit;
         anim.SetBool("onHit", true);
         //GameManager.SetGameSpeed(0);
     }
@@ -332,7 +339,8 @@ public class PlayerCharacter : MonoBehaviour
         SpriteRenderer.color = new Color32(255, 255, 255, 255);
 
         GameManager.SetGameSpeed(1);
-        isOnHit = false;
+        //isOnHit = false;
+        state = CharacterState.Running;        
         anim.SetBool("onHit", false);
     }
 
@@ -352,7 +360,8 @@ public class PlayerCharacter : MonoBehaviour
 
         anim.SetBool("die", true);
 
-        isDead = true;
+        //sisDead = true;
+        state = CharacterState.Dead;
         rb.velocity = Vector2.zero;
         rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
 
