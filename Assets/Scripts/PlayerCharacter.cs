@@ -5,7 +5,7 @@ using UnityEngine;
 
 public enum ColliderType
 { 
-    allDisable,
+    none,
     stand,
     slide,
     jump,
@@ -44,8 +44,7 @@ public class PlayerCharacter : MonoBehaviour
     //int lifeCount;
     int currentJumpCount;
     bool isGrounded;
-    bool isSliding;   
-    [SerializeField]
+    bool isSliding;       
     bool isDead;    
     bool isInvincible;
     bool isOnHit;
@@ -85,11 +84,15 @@ public class PlayerCharacter : MonoBehaviour
 
         if (!GameManager.IsPlaying) return;
         if (isDead) return;
+        if (isOnHit) return;
 
         anim.SetFloat("velocityY", rb.velocity.y);
 
-        GroundCheck();
-        if (isOnHit) return;
+
+        if (!isGrounded)
+        {
+            GroundCheck();
+        }                
 
         if (InputManager.JumpInput)
         {
@@ -145,9 +148,8 @@ public class PlayerCharacter : MonoBehaviour
             SoundManager.PlaySound("gameover");
             GameManager.SetDrillDistance(DrillDistanceState.impact);
 
-            Die();
-            
-        }
+            Die();           
+        }                    
 
         if (collision.gameObject.layer == LayerMask.NameToLayer("Drill"))
         {            
@@ -155,30 +157,9 @@ public class PlayerCharacter : MonoBehaviour
         }
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
+    private void OnDrawGizmos()
     {
-        // 발 부분 충돌 시에만 착지 판정
-        //if (collision.contacts[0].normal.y > 0.5f)
-        //{
-        //    // 착지 시 낙하속도 0으로 (바닥을 뚫지 않도록)
-        //    if (rb.velocity.y < 0)
-        //    {
-        //        rb.velocity = Vector2.zero;
-        //    }
-
-        //    ActiveCollider(ColliderType.stand);
-        //    if (isOnSlam) isOnSlam = false;
-        //    isGrounded = true;
-        //    currentJumpCount = 0;
-        //    anim.SetBool("jump", !isGrounded);
-
-        //    UiManager.SetRightBtnTxt("slide");
-        //}
-    }
-
-    void OnCollisionExit2D(Collision2D collision)
-    {
-        //isGrounded = false;
+        Gizmos.DrawLine(transform.position + Vector3.up, footPoint.position - Vector3.up * 0.1f);
     }
 
     #endregion 유니티 라이프 사이클    
@@ -187,16 +168,22 @@ public class PlayerCharacter : MonoBehaviour
 
     void GroundCheck()
     {
-        if (!GameManager.IsPlaying) return;
-        if (isGrounded) return;
-        if (rb.velocity.y > 0) return;
+        // 하강 시 에만
+        if (rb.velocity.y > 0)
+        {
+            Debug.Log("GroundCheck : not decending");
+            return;
+        } 
+
+        RaycastHit2D hit = Physics2D.Linecast(transform.position + Vector3.up, footPoint.position - Vector3.up * 0.1f);
+        if (!hit || hit.transform == transform) return;
 
         // 발 부분 충돌 시에만 착지 판정
-        float radius = 0.1f; 
-        Collider2D coll = Physics2D.OverlapCircle(footPoint.position, radius);
-        if (!coll || coll.transform.parent == transform) return;
+        //float radius = 0.1f;
+        //Collider2D coll = Physics2D.OverlapCircle(footPoint.position, radius);
+        //if (!coll || coll.transform.parent == transform) return;
 
-        Debug.Log("GroundChecked || coll : " + coll.name);
+        Debug.Log("GroundChecked || hit : " + hit.transform.name);
          
         // 착지 시 낙하속도 0으로 (바닥을 뚫지 않도록)
         rb.velocity = Vector2.zero;        
@@ -311,7 +298,7 @@ public class PlayerCharacter : MonoBehaviour
         rb.velocity = Vector2.zero;
         rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
 
-        ActiveCollider(ColliderType.allDisable);
+        ActiveCollider(ColliderType.none);
     }
 
     void Hit()

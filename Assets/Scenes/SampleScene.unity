@@ -1092,7 +1092,7 @@ GameObject:
   m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &306291300
 Transform:
   m_ObjectHideFlags: 0
@@ -3295,7 +3295,6 @@ MonoBehaviour:
   maxJumpCount: 2
   hitHoldTime: 1
   hitInvincibleTime: 0.5
-  isDead: 0
   footPoint: {fileID: 306291300}
 --- !u!1 &869371706
 GameObject:
@@ -7639,25 +7638,7 @@ MonoBehaviour:
   width: 24
   itemSpwaner: {fileID: 1502916933}
   GroundPrefabs:
-  - {fileID: 8424192260703159450, guid: fe976b1fd8f44eb4fb7cae710fa7876d, type: 3}
-  - {fileID: 4653040211477879233, guid: 988b2ed795733a349bfa780dfb05bf58, type: 3}
-  - {fileID: 4123081900526008626, guid: 4f89e9828dcc86d4c80fbb56fc1b4816, type: 3}
-  - {fileID: 5034740101599852396, guid: ab048fea729b0cd47b342d60423ff4d8, type: 3}
-  - {fileID: 5212898335304657470, guid: 20dc28ae8ab8e734388e3bfbd2fa5a8e, type: 3}
-  - {fileID: 1531532808132212264, guid: a905c12bbe49d0a47b559a583772718b, type: 3}
-  - {fileID: 2061856862137701419, guid: d57c64625a282ba4890ac01d7eba376b, type: 3}
-  - {fileID: 9071121428506607807, guid: 7b83684dc15db064c9211852d8aa1c26, type: 3}
-  - {fileID: 8348834010835333685, guid: 856a8b6f4ee462c4699cda339f02eaf5, type: 3}
-  - {fileID: 8348834010835333685, guid: 8886d324887256344b44c85366db30e8, type: 3}
-  - {fileID: 3315719341288264163, guid: 90e1fa0108503ee4aa8cebadb8908c0f, type: 3}
-  - {fileID: 4461621668572553753, guid: 47e2ab2f9db26db4c90af0125ffb7b3f, type: 3}
-  - {fileID: 7162630912275712186, guid: 3ac8657a43a809a43a74af38b845db8d, type: 3}
-  - {fileID: 1745096510903127621, guid: 63abe6d461b2d8e44b6bccd2ac9503d2, type: 3}
-  - {fileID: 884637081730204642, guid: 9f2398244b152e3428fac16e7d3bd897, type: 3}
-  - {fileID: 7674335604892986431, guid: fd9607c77a9e38e4da2580a53ff142d1, type: 3}
-  - {fileID: 2136098866498226788, guid: 7479266673c15554183c5e71cb566f54, type: 3}
-  - {fileID: 1383494402572979524, guid: 13bbb6965f4e56f46bda9bb25097d690, type: 3}
-  - {fileID: 8348834010835333685, guid: 03d54043767a0a746830401d0965a834, type: 3}
+  - {fileID: 8348834010835333685, guid: 77e623705113cdb45a94ef56eadb075a, type: 3}
   ClearGroundPrefab: {fileID: 6224807188730341568, guid: bd38c528f086bdd45885641be46f500d, type: 3}
   elevator: {fileID: 0}
   isRepeating: 1
@@ -7675,6 +7656,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf353e0a88e7dd840b798edbb735728a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SpwanItemCheck: 1
   ScoreItem: {fileID: 4360084672788699401, guid: 5d8583d6351ad30459228adc8f081b2e, type: 3}
   BoostItem: {fileID: 7516176533984402727, guid: c0971254e7f8c1742a4ee49815bf0467, type: 3}
   ShieldItem: {fileID: 8775287126303575623, guid: 63fa2e207b00f9b40b791f58cf425cf9, type: 3}

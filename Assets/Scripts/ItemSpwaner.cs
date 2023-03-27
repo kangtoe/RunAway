@@ -5,6 +5,9 @@ using UnityEngine;
 public class ItemSpwaner : MonoBehaviour
 {
     [SerializeField]
+    bool SpwanItemCheck = true;
+
+    [SerializeField]
     GameObject ScoreItem;
 
     [SerializeField]
@@ -17,7 +20,9 @@ public class ItemSpwaner : MonoBehaviour
     int SpwanedItemCount = 0;
 
     public GameObject SpwanItem(Transform tf)
-    {        
+    {
+        if (!SpwanItemCheck) return null;
+
         GameObject go;
 
         if (SpwanedItemCount != 0 && SpwanedItemCount % 12 == 0)
