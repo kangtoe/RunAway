@@ -310,7 +310,7 @@ public class PlayerCharacter : MonoBehaviour
     {
         if (isShielded)
         {
-            ActiveShield(false);
+            UseShieldItem(false);
             StartCoroutine(InvincibleControl(hitInvincibleTime));
         }
         else
@@ -430,8 +430,15 @@ public class PlayerCharacter : MonoBehaviour
         isBoosted = false;
     }
 
-    public void ActiveShield(bool active)
+    public void UseShieldItem(bool active)
     {
+        if (isShielded)
+        {
+            int shiledScore = 500;
+            ScoreManager.Instance.AddScore(shiledScore);
+            return;
+        }
+
         shield.SetActive(active);
         isShielded = active;
     }

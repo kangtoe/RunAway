@@ -65,6 +65,11 @@ public class GameManager : MonoBehaviour
     public bool IsInCutScene => state == GameState.playWait ? true : false;
     public bool IsInPreClearWait => state == GameState.preClearWait ? true : false;
 
+    void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
+
     void Start()
     {        
         UiManager.SetPauseUi(false);

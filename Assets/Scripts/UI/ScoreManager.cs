@@ -67,7 +67,7 @@ public class ScoreManager : MonoBehaviour
         scoreText.text = str;
     }
 
-    public void AddScore(int amount)
+    public void AddScore(float amount)
     {
         score += amount;
         SetScoreText(score);
@@ -77,11 +77,12 @@ public class ScoreManager : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(1 / GameManager.Instance.GameSpeed);
+            // 게임 스피드의 2배만큼 점수 증가 간격을 좁힌다.
+            // 최대한 피격을 적게 => 빠른 게임 스피드 유지 => 더 높은 점수
+            yield return new WaitForSeconds(1 / GameManager.Instance.GameSpeed * 2);
             if (!GameManager.Instance.IsPlaying) continue;
 
-            score += scorePerSec;
-            SetScoreText(score);
+            AddScore(scorePerSec);
         }
     }
 }
