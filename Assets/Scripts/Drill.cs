@@ -22,16 +22,18 @@ public class Drill : MonoBehaviour
     void OnEnable()
     {
         //StartCoroutine(SwingSmoothCr());
-    }
-    
-    void Start()
-    {
+
         closePos = transform.position;
         farPos = closePos - Vector3.right * 5f;
 
         centerPos = transform.position;
         moveDrill = true;
         StartCoroutine(SwingSmoothCr());
+    }
+    
+    void Start()
+    {
+        
     }
 
     

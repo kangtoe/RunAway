@@ -42,6 +42,12 @@ public class ScoreManager : MonoBehaviour
         //SetScoreText(score);
     }
 
+    public void Init()
+    {
+        score = 0;
+        SetScoreText(score);
+    }
+
     void SetScoreText(float f)
     {
         // 숫자를 문자열로 변환

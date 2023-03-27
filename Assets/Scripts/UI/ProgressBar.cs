@@ -75,6 +75,14 @@ public class ProgressBar : MonoBehaviour
         }
     }
 
+    public void Init()
+    {
+        Debug.Log("prgress bar init || time :" + Time.time);
+        StopAllCoroutines();
+        curr_Progress = 0;
+        total_icon.anchoredPosition = startPoint.anchoredPosition;
+    }
+
     public void MoveDrillIconSmooth(DrillDistanceState state, float duration = 1)
     {
         float dist = 0;
@@ -96,8 +104,13 @@ public class ProgressBar : MonoBehaviour
 
         while (t <= 1)
         {
-            t += Time.deltaTime / duration;
-            if (t > 1) t = 1;
+            if (duration == 0) t = 1;
+            else
+            {
+                t += Time.deltaTime / duration;
+                if (t > 1) t = 1;
+            }
+            
 
             Vector2 iconPos = Vector3.Lerp(startPos, targetPos, t);
             drill_icon.anchoredPosition = iconPos;

@@ -241,7 +241,7 @@ public class PlayerCharacter : MonoBehaviour
     {
         Debug.Log("OnStartSlide");
 
-        SoundManager.PlaySound("slide", SoundType.Bgm);
+        SoundManager.PlaySound("slide", SoundType.Sfx);
         anim.SetBool("slide", true);
         isSliding = true;
 
@@ -250,7 +250,7 @@ public class PlayerCharacter : MonoBehaviour
     
     public void OnEndSlide()
     {
-        SoundManager.StopSound("slide");
+        //SoundManager.StopSound("slide");
         isSliding = false;
         anim.SetBool("slide", false);
 
@@ -358,6 +358,8 @@ public class PlayerCharacter : MonoBehaviour
 
     void OnStartHit()
     {
+        ActiveCollider(ColliderType.stand);
+
         isOnHit = true;
         anim.SetBool("onHit", true);
         //GameManager.SetGameSpeed(0);

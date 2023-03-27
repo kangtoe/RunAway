@@ -58,6 +58,9 @@ public class GameManager : MonoBehaviour
     DrillDistanceState drillDist = DrillDistanceState.far;
     public DrillDistanceState DrillDist => drillDist;
 
+    [SerializeField]
+    bool skipNextStartCutScene = false;
+
     UiManager UiManager => UiManager.Instance;
     SoundManager SoundManager => SoundManager.Instance;
 
@@ -67,20 +70,15 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
+        if (instance) Destroy(gameObject);
         DontDestroyOnLoad(gameObject);
-    }
+    }    
 
     void Start()
-    {        
-        UiManager.SetPauseUi(false);
-        UiManager.SetInGameUIs(false);
-        UiManager.SetStartUi(true);                
-
-        drill = FindObjectOfType<Drill>();
-        progressBar = FindObjectOfType<ProgressBar>();
-        repeatGround = FindObjectOfType<RepeatGround>();
-
-        gameSpeed = startGameSpeed;
+    {
+        Init();
+        SceneManager.sceneLoaded += Init;
+        skipNextStartCutScene = true;
     }
 
     void Update()
@@ -103,8 +101,44 @@ public class GameManager : MonoBehaviour
         }                
     }
 
+    void Init(Scene scene = default, LoadSceneMode mode = default)
+    {
+        StopAllCoroutines();        
+
+        Debug.Log("game manager || time :" + Time.time);
+
+        UiManager.SetPauseUi(false);
+        UiManager.SetInGameUIs(false);
+        UiManager.SetStartUi(true);
+        UiManager.SetOverUi(false);
+
+        ScoreManager.Instance.Init();
+
+        drill = FindObjectOfType<Drill>();
+        progressBar = FindObjectOfType<ProgressBar>();
+        repeatGround = FindObjectOfType<RepeatGround>();        
+
+        drillDist = DrillDistanceState.far;
+        gameSpeed = startGameSpeed;
+
+        if (skipNextStartCutScene)
+        {
+            StartGame();
+            drill.centerPos = drill.farPos;
+            state = GameState.play;
+            progressBar.Init();
+            progressBar.MoveDrillIconSmooth(drillDist, 0);
+        }
+        else
+        {
+            drill.centerPos = drill.closePos;
+            state = GameState.ready;
+        }        
+    }
+
     public void StartGame()
-    {              
+    {
+        UiManager.SetStartUi(false);
         UiManager.SetInGameUIs(true);
         state = GameState.play;              
     }
@@ -191,6 +225,8 @@ public class GameManager : MonoBehaviour
 
     IEnumerator StartCutSceneCr(float duration)
     {
+        if (duration == 0) yield break;
+
         SetGameSpeed(2);        
 
         float t = 0;
@@ -251,7 +287,7 @@ public class GameManager : MonoBehaviour
 
     public void SetDrillDistance(DrillDistanceState _drillDist, float duration = 1)
     {
-        //Debug.Log("SetDrillDistance");
+        Debug.Log("SetDrillDistance");
 
         if (_drillDist == drillDist)
         {
