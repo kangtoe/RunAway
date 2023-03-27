@@ -175,15 +175,20 @@ public class PlayerCharacter : MonoBehaviour
             return;
         } 
 
-        RaycastHit2D hit = Physics2D.Linecast(transform.position + Vector3.up, footPoint.position - Vector3.up * 0.1f);
-        if (!hit || hit.transform == transform) return;
+        RaycastHit2D[] hits = Physics2D.LinecastAll(transform.position + Vector3.up, footPoint.position - Vector3.up * 0.1f);
+        if (hits == null) return;
+        bool groundHit = false;
+        foreach (RaycastHit2D hit in hits)
+        {
+            if (hit.transform != transform && hit.transform.gameObject.layer != LayerMask.NameToLayer("Item")) groundHit = true;
+        } 
+        if (!groundHit) return;
 
         // 발 부분 충돌 시에만 착지 판정
         //float radius = 0.1f;
         //Collider2D coll = Physics2D.OverlapCircle(footPoint.position, radius);
         //if (!coll || coll.transform.parent == transform) return;
-
-        Debug.Log("GroundChecked || hit : " + hit.transform.name);
+        //Debug.Log("GroundChecked || hit : " + coll.transform.name);
          
         // 착지 시 낙하속도 0으로 (바닥을 뚫지 않도록)
         rb.velocity = Vector2.zero;        
