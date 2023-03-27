@@ -10583,6 +10583,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   score: 0
+  scorePerSec: 10
   scoreText: {fileID: 56712138}
 --- !u!4 &1946427702
 Transform:

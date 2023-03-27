@@ -171,7 +171,7 @@ public class PlayerCharacter : MonoBehaviour
         // 하강 시 에만
         if (rb.velocity.y > 0)
         {
-            Debug.Log("GroundCheck : not decending");
+            //Debug.Log("GroundCheck : not decending");
             return;
         } 
 
