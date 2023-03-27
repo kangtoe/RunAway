@@ -13,7 +13,7 @@ public class ShieldItem : ItemBase
     public override void UseItem(PlayerCharacter user)
     {
         SoundManager.Instance.PlaySound("item");
-        user.UseShieldItem(true);
+        user.GetShield();
         Destroy(gameObject);
     }
 }
