@@ -177,6 +177,8 @@ public class GameManager : MonoBehaviour
         state = GameState.over;
         SetGameSpeed(0);
         UiManager.SetOverUi(true);
+
+        AdManager.Instance.Count();
     }
 
     void GameClear()
