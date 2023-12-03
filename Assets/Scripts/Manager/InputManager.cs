@@ -18,7 +18,10 @@ public class InputManager : MonoBehaviour
             return instance;
         }
     }
-    private static InputManager instance;    
+    private static InputManager instance;
+
+    public bool RightInput => rightInput || Input.GetKey(KeyCode.L);
+    [SerializeField] bool rightInput = false;
 
     // 버튼 유지 시 계속 입력 값은 참
     public bool SlideInput => slideinput || Input.GetKey(KeyCode.L);
@@ -48,6 +51,11 @@ public class InputManager : MonoBehaviour
     {
         jumpinput = false;
         slamInput = false;
+    }
+
+    public void SetRightBtnInput(bool active)
+    {
+        rightInput = active;
     }
 
     public void SetSlideInput(bool active)

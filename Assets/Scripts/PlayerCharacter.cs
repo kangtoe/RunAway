@@ -92,29 +92,43 @@ public class PlayerCharacter : MonoBehaviour
         if (!isGrounded)
         {
             GroundCheck();
-        }                
+        }
 
         if (InputManager.JumpInput)
         {
             TryJump();
         }
 
-        if (InputManager.SlamInput)
+        //if (InputManager.SlamInput)
+        //{
+        //    if (!isGrounded) Slam();
+        //}
+
+        //if (InputManager.SlideInput)
+        //{             
+        //    if (!isSliding) OnStartSlide();
+
+        //}
+        //else
+        //{
+        //    if (isSliding) OnEndSlide();
+        //}
+
+        if (isGrounded)
         {
-            if (!isGrounded) Slam();
-        }
-
-        if (InputManager.SlideInput)
-        {             
-            if (!isSliding) OnStartSlide();
-
+            if (InputManager.RightInput)
+            {
+                if (!isSliding) OnStartSlide();
+            }
+            else
+            {
+                if (isSliding) OnEndSlide();
+            }
         }
         else
         {
-            if (isSliding) OnEndSlide();
+            if (InputManager.RightInput) Slam();
         }
-
-        
     }
 
     void OnTriggerStay2D(Collider2D collision)
@@ -199,8 +213,8 @@ public class PlayerCharacter : MonoBehaviour
         currentJumpCount = 0;
         anim.SetBool("jump", !isGrounded);
 
-        UiManager.SetSlideBtn();
-        //UiManager.SetRightBtnTxt("slide");
+        //UiManager.SetSlideBtn();
+        UiManager.SetRightBtnTxt("slide");
     }
 
     public void TryJump()
@@ -215,8 +229,8 @@ public class PlayerCharacter : MonoBehaviour
         ActiveCollider(ColliderType.jump);
         SoundManager.PlaySound("jump");
 
-        UiManager.SetSlamBtn();
-        //UiManager.SetRightBtnTxt("down");
+        //UiManager.SetSlamBtn();
+        UiManager.SetRightBtnTxt("down");
 
         rb.velocity = Vector2.zero;
         rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);

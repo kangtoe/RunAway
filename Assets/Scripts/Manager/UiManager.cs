@@ -69,7 +69,7 @@ public class UiManager : MonoBehaviour
     {
         foreach (GameObject go in inGameUis) { go.SetActive(active); }
 
-        if (active) SetSlideBtn();
+        //if (active) SetSlideBtn();
     }
 
     public void SetRightBtnTxt(string str)
