@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class RepeatGround : RepeatObjects
-{
+{    
+
     [SerializeField]
     ItemSpwaner itemSpwaner;
 
@@ -25,7 +26,9 @@ public class RepeatGround : RepeatObjects
     [SerializeField]
     int ItemSpwanInterval = 3;
 
-    GameManager GameManager => GameManager.Instance;    
+    GameManager GameManager => GameManager.Instance;
+
+    public float Speed => speed;
 
     // Update is called once per frame
     void Update()

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7477326383036694952}
   - component: {fileID: 7477326383036694953}
   - component: {fileID: 7477326383036694958}
+  - component: {fileID: 1127372156428599762}
   m_Layer: 0
   m_Name: DustEffect
   m_TagString: Untagged
@@ -113,5 +114,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 85ea8984561a83443867c44b6335c20a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1127372156428599762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7477326383036694954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b47992c08691a3b42a01f70234e099f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
