@@ -5273,6 +5273,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1347069868}
+  - component: {fileID: 1347069869}
   m_Layer: 0
   m_Name: AdManager
   m_TagString: Untagged
@@ -5294,6 +5295,19 @@ Transform:
   m_Father: {fileID: 1034234446}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1347069869
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1347069867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 194a0e883f0f8bf45881a929d848ff13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deathCount: 0
 --- !u!1 &1356526425
 GameObject:
   m_ObjectHideFlags: 0
